@@ -1,0 +1,68 @@
+\chapter{Introducing Scikit-Learn\label{Ch38}}
+\section{Data Representation in Scikit-Learn}
+Consider the Iris dataset, each row of the data refers to a single observed flower, and the number of rows
+is the total number of flowers in the dataset. In general, we will refer to the rows of
+the matrix as \textbf{samples}, and the number of rows as \verb|n_samples|.
+
+Likewise, each column of the data refers to a particular quantitative piece of information that describes each sample. In general, we will refer to the columns of the matrix
+as \textbf{features}, and the number of columns as \verb|n_features|.
+
+\subsection*{The Features Matrix}
+The table layout makes clear that the information can be thought of as a two-
+dimensional numerical array or matrix, which we will call the \textbf{features matrix}. By convention, this matrix is often stored in a variable named X. The features matrix is
+assumed to be two-dimensional, with shape \verb|[n_samples, n_features]|, and is most
+often contained in a NumPy array or a Pandas DataFrame, though some Scikit-Learn
+models also accept SciPy sparse matrices.
+
+\subsection*{The Target Array}
+In addition to the feature matrix X, we also generally work with a label or target array,
+which by convention we will usually call y. The target array is usually one-
+dimensional, with length \verb|n_samples|, and is generally contained in a NumPy array or
+Pandas Series. The target array may have continuous numerical values, or discrete
+classes/labels. While some Scikit-Learn estimators do handle multiple target values in
+the form of a two-dimensional, \verb|[n_samples, n_targets]| target array, we will primarily be working with the common case of a one-dimensional target array.
+
+\section{The Estimator API}
+\subsection*{Basics of the API}
+Most commonly, the steps in using the Scikit-Learn Estimator API are as follows:
+\begin{enumerate}
+    \item Choose a class of model by importing the appropriate estimator class from Scikit-
+          Learn.
+    \item Choose model hyperparameters by instantiating this class with desired values.
+    \item Arrange data into a features matrix and target vector.
+    \item Fit the model to your data by calling the fit method of the model instance.
+    \item Apply the model to new data:
+          \begin{itemize}
+              \item For supervised learning, often we predict labels for unknown data using the
+                    \verb|predict| method.
+              \item For unsupervised learning, we often transform or infer properties of the data
+                    using the \verb|transform| or \verb|predict| method.
+          \end{itemize}
+\end{enumerate}
+
+\subsection*{Supervised Learning Example: Simple Linear Regression}
+\subsubsection*{Choose model hyperparameters}
+\important{An important point is that a class of model is not the same as an instance of a model.}
+
+Once we have decided on our model class, there are still some options open to us.
+Depending on the model class we are working with, we might need to answer one or
+more questions like the following:
+
+\begin{itemize}
+    \item Would we like to fit for the offset (i.e., y-intercept)?
+    \item Would we like the model to be normalized?
+    \item Would we like to preprocess our features to add model flexibility?
+    \item What degree of regularization would we like to use in our model?
+    \item How many model components would we like to use?
+\end{itemize}
+
+These are examples of the important choices that must be made once the model class is
+selected. These choices are often represented as hyperparameters, or parameters that
+must be set before the model is fit to data.
+
+\subsubsection*{Supervised Learning Example: Iris Classification}
+We will use a simple generative model known as \textbf{Gaussian naive Bayes}\marginpar[Gaussian naive Bayes]{Gaussian naive Bayes},
+which proceeds by assuming each class is drawn from an axis-aligned Gaussian distribution. Because it is so fast and has no hyperparameters to choose,
+\tips{Gaussian naive Bayes is often a good model to use as a baseline
+    classification, before exploring whether improvements can be found through more
+    sophisticated models.}

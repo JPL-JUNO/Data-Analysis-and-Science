@@ -1,0 +1,58 @@
+\chapter{Combining Datasets: concat and append\label{Ch18}}
+Some of the most interesting studies of data come from combining different data
+sources. These operations can involve anything from very straightforward concatenation of two different datasets to more complicated database-style joins and merges
+that correctly handle any overlaps between the datasets.
+\section{Recall: Concatenation of NumPy Arrays}
+Concatenation of Series and DataFrame objects behaves similarly to concatenation
+of NumPy arrays, which can be done via the \verb|np.concatenate|\marginpar[concatenate]{concatenate} function.
+
+The first argument is a list or tuple of arrays to concatenate. Additionally, in the case
+of multidimensional arrays, it takes an axis keyword that allows you to specify the
+axis along which the result will be concatenated.
+
+
+\section{Simple Concatenation with pd.concat}
+The \verb|pd.concat|\marginpar[concat]{concat} function provides a similar syntax to np.concatenate but contains a
+number of options.
+
+pd.concat can be used for a simple concatenation of Series or DataFrame objects,
+just as np.concatenate can be used for simple concatenations of arrays.
+
+It's default behavior is to concatenate row-wise within the DataFrame (i.e., axis=0).
+Like np.concatenate, pd.concat allows specification of an axis along which concatenation will take place.
+\subsection*{Duplicate Indices}
+One important difference between np.concatenate and pd.concat is that Pandas
+concatenation \emph{preserves indices}, even if the result will have duplicate indices! While this is valid within DataFrames, the
+outcome is often undesirable. pd.concat gives us a few ways to handle it.
+\subsubsection*{Treating repeated indices as an error}
+
+If you'd like to simply verify that the indices in the result of pd.concat do not overlap,
+you can include the \verb|verify_integrity| flag. With this set to True, the concatenation
+will raise an exception if there are duplicate indices.
+\subsubsection*{Ignoring the index}
+Sometimes the index itself does not matter, and you would prefer it to simply be
+ignored. This option can be specified using the \verb|ignore_index| flag. With this set to
+True, the concatenation will create a new integer index for the resulting DataFrame
+\subsubsection*{Adding MultiIndex keys}
+Another option is to use the keys option to specify a label for the data sources; the
+result will be a hierarchically indexed series containing the data
+\subsubsection*{Concatenation with Joins}
+In practice, data from different sources might have different sets of column names, and pd.concat offers several options in this case.
+
+The default behavior is to fill entries for which no data is available with NA values. To
+change this, we can adjust the join parameter of the concat function. By default, the
+join is a union of the input columns (\verb|join='outer'|), but we can change this to an
+intersection of the columns using \verb|join='inner'|.
+
+Another useful pattern is to use the reindex method before concatenation for finer
+control over which columns are dropped.(这种效果似乎可以实现左连接或者右连接，因为参数 join 只能是内连接和外连接两种)
+\subsection*{The append Method}
+Because direct array concatenation is so common, Series and DataFrame objects
+have an append method that can accomplish the same thing in fewer keystrokes.
+
+Keep in mind that unlike the append and extend methods of Python lists, the append
+method in Pandas does not modify the original object; instead \notes{it creates a new object with the combined data}. It also is not a very efficient method, because it involves creation of a new index and data buffer. Thus, if you plan to do multiple append operations, it is generally better to build a list of DataFrame objects and pass them all at once to the concat function.
+
+\important{
+    FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
+}

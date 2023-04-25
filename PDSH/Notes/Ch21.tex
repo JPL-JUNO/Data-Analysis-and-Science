@@ -1,0 +1,34 @@
+\chapter{Pivot Tables\label{Ch21}}
+We have seen how the groupby abstraction lets us explore relationships within a dataset. A pivot table is a similar operation that is commonly seen in spreadsheets and
+other programs that operate on tabular data. \important{The pivot table takes simple column-
+    wise data as input, and groups the entries into a two-dimensional table that provides
+    a multidimensional summarization of the data.} The difference between pivot tables
+and groupby can sometimes cause confusion; it helps me to think of pivot tables as
+essentially a multidimensional version of groupby aggregation. That is, you split-
+apply-combine, but both the split and the combine happen across not a one-
+dimensional index, but across a two-dimensional grid.
+
+\section{Pivot Tables by Hand}
+\section{Pivot Table Syntax}
+\subsection*{Multilevel Pivot Tables}
+Just as in a groupby, the grouping in pivot tables can be specified with multiple levels
+and via a number of options.
+
+We can apply the same strategy when working with the columns as well.
+
+\subsection*{Additional Pivot Table Options}
+The \verb|aggfunc|\marginpar[aggfunc]{aggfunc} keyword controls what type of aggregation is applied, which is a mean
+by default. As with groupby, the aggregation specification can be a string representing
+one of several common choices ('sum', 'mean', 'count', 'min', 'max', etc.) or a
+function that implements an aggregation (e.g., np.sum(), min(), sum(), etc.). Additionally, it can be specified as a dictionary mapping a column to any of the desired
+options.
+
+Notice also here that we've omitted the values keyword; when specifying a mapping
+for aggfunc, this is determined automatically.
+
+At times it's useful to compute totals along each grouping. This can be done via the
+\verb|margins|\marginpar[margins]{margins} keyword. The
+margin label can be specified with the \verb|margins_name| keyword; it defaults to "All".
+
+透视表构建的是多层索引的数据框。
+

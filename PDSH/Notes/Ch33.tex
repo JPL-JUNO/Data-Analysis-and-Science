@@ -1,0 +1,99 @@
+\chapter{Customizing Ticks\label{}}
+Matplotlib's default tick locators and formatters are designed to be generally sufficient
+in many common situations, but are in no way optimal for every plot.
+
+Before we go into examples, however, let's talk a bit more about the object hierarchy
+of Matplotlib plots. Matplotlib aims to have a Python object representing everything
+that appears on the plot: for example, recall that the Figure is the bounding box
+within which plot elements appear. Each Matplotlib object can also act as a container
+of subobjects: for example, each Figure can contain one or more Axes objects, each
+of which in turn contains other objects representing plot contents.
+
+The tickmarks are no exception. Each axes has attributes xaxis and yaxis, which in
+turn have attributes that contain all the properties of the lines, ticks, and labels that
+make up the axes.
+\section{Major and Minor Ticks}
+Within each axes, there is the concept of a major tickmark, and a minor tickmark. As
+the names imply, major ticks are usually bigger or more pronounced, while minor
+ticks are usually smaller. By default, Matplotlib rarely makes use of minor ticks, but
+one place you can see them is within logarithmic plots.
+
+
+These tick properties—locations and labels, that is—can be customized by setting the
+\verb|formatter|\marginpar[formatter]{formatter} and \verb|locator|\marginpar[locator]{locator} objects of each axis.
+
+
+
+\begin{pyc}
+    ax.xaxis.get_major_locator()
+    ax.xaxis.get_minor_locator()
+    ax.xaxis.get_major_formatter()
+    ax.xaxis.get_minor_formatter()
+\end{pyc}
+
+\section{Hiding Ticks or Labels}
+Perhaps the most common tick/label formatting operation is the act of hiding ticks or
+labels. This can be done using \verb|plt.NullLocator| and \verb|plt.NullFormatter|. Having no ticks at
+all can be useful in many situations—for example, when you want to show a grid of
+images.
+
+\section{Reducing or Increasing the Number of Ticks}
+One common problem with the default settings is that smaller subplots can end up
+with crowded labels. Particularly for the x-axis ticks, the numbers nearly overlap, making them quite difficult to decipher. One way to adjust this is with \verb|plt.MaxNLocator|, which allows us to
+specify the maximum number of ticks that will be displayed.
+
+\section{Fancy Tick Formats}
+Matplotlib's default tick formatting can leave a lot to be desired: it works well as a
+broad default, but sometimes you'd like to do something different. 比如说需要绘制 $\pi$ 作为刻度，而不是整数或者说是小数表示的 $\pi$。
+
+We can do this by setting a
+\verb|MultipleLocator|\marginpar[MultipleLocator]{MultipleLocator}, which locates ticks at a multiple of the number we provide.
+
+we can change the tick formatter. There's no built-in formatter for what we want to do, so
+we'll instead use \verb|plt.FuncFormatter|, which accepts a user-defined function giving
+fine-grained control over the tick outputs
+
+\section{Summary of Formatters and Locators}
+We've seen a couple of the available formatters and locators; I'll conclude this chapter
+by listing all of the built-in locator options (\autoref{Matplotlib locator options}) and formatter options
+(\autoref{Matplotlib formatter options}).
+
+\begin{table}
+    \centering
+    \caption{Matplotlib locator options}
+    \label{Matplotlib locator options}
+    \begin{tabular}{ll}
+        \hline
+        Locator class    & Description                                             \\
+        \hline
+        NullLocator      & No ticks                                                \\
+        FixedLocator     & Tick locations are fixed                                \\
+        IndexLocator     & Locator for index plots (e.g., where x = range(len(y))) \\
+        LinearLocator    & Evenly spaced ticks from min to max                     \\
+        LogLocator       & Logarithmically spaced ticks from min to max            \\
+        MultipleLocator  & Ticks and range are a multiple of base                  \\
+        MaxNLocator      & Finds up to a max number of ticks at nice locations     \\
+        AutoLocator      & (Default) MaxNLocator with simple defaults              \\
+        AutoMinorLocator & Locator for minor ticks                                 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}
+    \centering
+    \caption{Matplotlib formatter options}
+    \label{Matplotlib formatter options}
+    \begin{tabular}{ll}
+        \hline
+        Formatter class    & Description                             \\
+        \hline
+        NullFormatter      & No labels on the ticks                  \\
+        IndexFormatter     & Set the strings from a list of labels   \\
+        FixedFormatter     & Set the strings manually for the labels \\
+        FuncFormatter      & User-defined function sets the labels   \\
+        FormatStrFormatter & Use a format string for each value      \\
+        ScalarFormatter    & Default formatter for scalar values     \\
+        LogFormatter       & Default formatter for log axes          \\
+        \hline
+    \end{tabular}
+\end{table}

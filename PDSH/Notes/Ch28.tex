@@ -1,0 +1,105 @@
+\chapter{Density and Contour Plots\label{Ch28}}
+Sometimes it is useful to display three-dimensional data in two dimensions using
+contours or color-coded regions. There are three Matplotlib functions that can be
+helpful for this task: plt.contour\marginpar[plt.contour]{plt.contour} for contour plots, plt.contourf\marginpar[plt.contourf]{plt.contourf} for filled contour
+plots, and plt.imshow\marginpar[plt.imshow]{plt.imshow} for showing images.
+
+\section{Visualizing a Three-Dimensional Function}
+A contour plot can be created with the plt.contour function. It takes three arguments: a grid of x values, a grid of y values, and a grid of z values. The x and y values
+represent positions on the plot, and the z values will be represented by the contour
+levels. Perhaps the most straightforward way to prepare such data is to use the
+np.meshgrid\marginpar[np.meshgrid]{np.meshgrid} function, which builds two-dimensional grids from one-dimensional
+arrays.
+
+Notice that when a single color is used, negative values are represented by dashed
+lines and positive values by solid lines. Alternatively, the lines can be color-coded by
+specifying a colormap with the cmap\marginpar[cmap]{cmap} argument.
+
+Here we chose the RdGy (short for Red–Gray) colormap, which is a good choice for
+divergent data: (i.e., data with positive and negative variation around zero).
+
+Our plot is looking nicer, but the spaces between the lines may be a bit distracting.
+We can change this by switching to a filled contour plot using the plt.contourf
+function, which uses largely the same syntax as plt.contour.
+
+Additionally, we'll add a plt.colorbar command, which creates an additional axis
+with labeled color information for the plot (see \autoref{Visualizing three-dimensional data with filled contours}).
+
+\figures{Visualizing three-dimensional data with filled contours}
+
+One potential issue with this plot is that it is a bit splotchy: the color steps are discrete
+rather than continuous, which is not always what is desired. This could be remedied
+by setting the number of contours to a very high number, but this results in a rather
+inefficient plot: Matplotlib must render a new polygon for each step in the level. A
+better way to generate a smooth representation is to use the plt.imshow function,
+which offers the interpolation argument to generate a smooth two-dimensional
+representation of the data.
+
+There are a few potential gotchas with plt.imshow, however(\important{以下这几条都很重要}):
+\begin{itemize}
+    \item It doesn't accept an x and y grid, so you must manually specify the extent [xmin,
+                  xmax, ymin, ymax] of the image on the plot.
+    \item By default it follows the standard image array definition where the origin is in the
+          upper left, not in the lower left as in most contour plots. This must be changed
+          when showing gridded data.
+    \item It will automatically adjust the axis aspect ratio to match the input data; this can
+          be changed with the aspect argument.
+\end{itemize}
+
+Finally, it can sometimes be useful to combine contour plots and image plots. For
+example, here we'll use a partially transparent background image (with transparency
+set via the alpha parameter) and overplot contours with labels on the contours themselves, using the plt.clabel function(see \autoref{Labeled contours on top of an image}):
+
+
+\figures{Labeled contours on top of an image}
+
+\begin{pyc}
+    contours = plt.contour(X, Y, Z, 3, colors='black')
+    plt.clabel(contours, inline=True, fontsize=8)
+    plt.imshow(Z, extent=[0, 5, 0, 5], origin='lower', aspect='equal',
+    cmap='RdGy', alpha=.5, interpolation='gaussian')
+    plt.colorbar()
+\end{pyc}
+
+The combination of these three functions—plt.contour, plt.contourf, and
+plt.imshow—gives nearly limitless possibilities for displaying this sort of three-
+dimensional data within a two-dimensional plot.
+
+\section{Histograms, Binnings, and Density}
+A simple histogram can be a great first step in understanding a dataset.
+
+The plt.hist docstring has more information on other available customization
+options. I find this combination of \verb|histtype='stepfilled'| along with some transparency alpha to be helpful when comparing histograms of several distributions(see \autoref{Overplotting multiple histograms}).
+
+\figures{Overplotting multiple histograms}
+
+If you are interested in computing, but not displaying, the histogram (that is, counting the number of points in a given bin), you can use the \verb|np.histogram|\marginpar[np.histogram]{np.histogram} function.
+
+\section{Two-Dimensional Histograms and Binnings}
+Just as we create histograms in one dimension by dividing the number line into bins,
+we can also create histograms in two dimensions by dividing points among two-dimensional bins.
+
+\subsection*{plt.hist2d: Two-Dimensional Histogram}
+One straightforward way to plot a two-dimensional histogram is to use Matplotlib's
+\verb|plt.hist2d|\marginpar[plt.hist2d]{plt.hist2d} function.
+
+Just as plt.hist has a counterpart in np.histogram, plt.hist2d has a counterpart in
+np.histogram2d\marginpar[np.histogram2d]{np.histogram2d}.
+
+\subsection*{plt.hexbin: Hexagonal Binnings}
+The two-dimensional histogram creates a tesselation of squares across the axes.
+Another natural shape for such a tesselation is the regular hexagon. For this purpose,
+Matplotlib provides the plt.hexbin routine, which represents a two-dimensional
+dataset binned within a grid of hexagons.
+
+plt.hexbin has a number of additional options, including the ability to specify
+weights for each point and to change the output in each bin to any NumPy aggregate
+(mean of weights, standard deviation of weights, etc.).
+
+\subsection*{Kernel Density Estimation}
+Another common method for estimating and representing densities in multiple
+dimensions is \textbf{kernel density estimation}\marginpar[kernel density estimation]{kernel density estimation} (KDE). Now I'll simply mention that KDE can be thought of as a way to
+“smear out” the points in space and add up the result to obtain a smooth function.
+
+KDE has a smoothing length that effectively slides the knob between detail and
+smoothness (one example of the ubiquitous bias–variance trade-off).

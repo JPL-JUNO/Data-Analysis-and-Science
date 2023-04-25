@@ -1,0 +1,104 @@
+\chapter{Vectorized String Operations\label{Ch22}}
+One strength of Python is its relative ease in handling and manipulating string data.
+Pandas builds on this and provides a comprehensive set of vectorized string operations
+that are an important part of the type of munging required when working with (read:
+cleaning up) real-world data.
+
+
+\section{Introducing Pandas String Operations}
+\important{Pandas includes features to address both this need for vectorized string operations as
+    well as the need for correctly handling missing data via the str\marginpar[str]{str} attribute of Pandas
+    Series and Index objects containing strings.}(通过 \verb|str| 属性来实现字符串的向量化操作)
+\section{Tables of Pandas String Methods}
+If you have a good understanding of string manipulation in Python, most of the Pandas string syntax is intuitive enough that it's probably sufficient to just list the available methods.
+
+\subsection*{Methods Similar to Python String Methods}
+Nearly all of Python's built-in string methods are mirrored by a Pandas vectorized
+string method. The following Pandas str methods mirror Python string methods:
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lllll}
+        \hline
+        len        & lower      & translate & islower & ljust    \\
+        upper      & startswith & isupper   & rjust   & find     \\
+        endswith   & isnumeric  & center    & rfind   & isalnum  \\
+        isdecimal  & zfill      & index     & isalpha & split    \\
+        strip      & rindex     & isdigit   & rsplit  & rstrip   \\
+        capitalize & isspace    & partition & lstrip  & swapcase \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Notice that these have various return values. Some, like lower, return a series of
+strings. But some others return numbers or Boolean values. Still others return lists or other compound values for each element.
+
+\subsection*{Methods Using Regular Expressions}
+In addition, there are several methods that accept regular expressions (regexps) to
+examine the content of each string element, and follow some of the API conventions
+of Python's built-in re module (see \autoref{tab22-1}).
+
+\begin{table}
+    \centering
+    \caption{Mapping between Pandas methods and functions in Python's re module}
+    \label{tab22-1}
+    \begin{tabular}{ll}
+        \hline
+        Method   & Description                                                          \\
+        \hline
+        match    & Calls re.match on each element, returning a Boolean.                 \\
+        extract  & Calls re.match on each element, returning matched groups as strings. \\
+        findall  & Calls re.findall on each element                                     \\
+        replace  & Replaces occurrences of pattern with some other string               \\
+        contains & Calls re.search on each element, returning a boolean                 \\
+        count    & Counts occurrences of pattern                                        \\
+        split    & Equivalent to str.split, but accepts regexps                         \\
+        rsplit   & Equivalent to str.rsplit, but accepts regexps                        \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\subsection*{Miscellaneous Methods}
+Finally, \autoref{tab22-2} lists miscellaneous methods that enable other convenient
+operations.
+
+\begin{table}
+
+    \centering
+    \caption{Other Pandas string methods}
+    \label{tab22-2}
+    \begin{tabular}{ll}
+        \hline
+        Method               & Description                                                           \\
+        \hline
+        \verb|get|           & Indexes each element                                                  \\
+        \verb|slice|         & Slices each element                                                   \\
+        \verb|slice_replace| & Replaces slice in each element with the passed value                  \\
+        \verb|cat|           & Concatenates strings                                                  \\
+        \verb|repeat|        & Repeats values                                                        \\
+        \verb|normalize|     & Returns Unicode form of strings                                       \\
+        \verb|pad|           & Adds whitespace to left, right, or both sides of strings              \\
+        \verb|wrap|          & Splits long strings into lines with length less than a given width    \\
+        \verb|join|          & Joins strings in each element of the Series with the passed separator \\
+        \verb|get_dummies|   & Extracts dummy variables as a DataFrame                               \\
+        \hline
+    \end{tabular}
+\end{table}
+\subsubsection*{Vectorized item access and slicing}
+The get and slice operations, in particular, enable vectorized element access from
+each array. This behavior is also available through Python's normal
+indexing syntax.
+
+Indexing via \verb|df.str.get(i)| and \verb|df.str[i]| are likewise similar.
+
+These indexing methods also let you access elements of arrays returned by split. For
+example, to extract the last name of each entry, combine split with str indexing.
+
+\subsubsection*{Indicator variables}
+Another method that requires a bit of extra explanation is the \verb|get_dummies| method.
+This is useful when your data has a column containing some sort of coded indicator.
+
+\section{Going Further with Recipes}
+\subsection*{Going Further with Recipes}
+Extracting full ingredient lists from each recipe would be an important piece of the
+task; unfortunately, the wide variety of formats used makes this a relatively time-consuming process. This points to the truism that in data science, cleaning and
+munging of real-world data often comprises the majority of the work.

@@ -1,0 +1,226 @@
+\chapter{Working with Time Series\label{Ch23}}
+
+Pandas was originally developed in the context of financial modeling, so as you might
+expect, it contains an extensive set of tools for working with dates, times, and time-
+indexed data. Date and time data comes in a few flavors, which we will discuss here:
+
+\begin{itemize}
+    \item Timestamps(时间戳)
+          Particular moments in time (e.g., July 4, 2021 at 7:00 a.m.).
+    \item Time intervals(时间间隔) and periods(周期)
+          A length of time between a particular beginning and end point; for example, the
+          month of June 2021. Periods usually reference a special case of time intervals in
+          which each interval is of uniform length and does not overlap (e.g., 24-hour-long
+          periods comprising days).
+    \item Time deltas(时间增量或者时间差) or durations(持续时间)
+          An exact length of time (e.g., a duration of 22.56 seconds).
+\end{itemize}
+
+\section{Dates and Times in Python}
+The Python world has a number of available representations of dates, times, deltas,
+and time spans. While the time series tools provided by Pandas tend to be the most
+useful for data science applications, it is helpful to see their relationship to other tools
+used in Python.
+\subsection*{Native Python Dates and Times: datetime and dateutil}
+Python's basic objects for working with dates and times reside in the built-in
+datetime module. Along with the third-party dateutil module, you can use this to
+quickly perform a host of useful functionalities on dates and times.
+
+The power of datetime and dateutil lies in their flexibility and easy syntax: you can
+use these objects and their built-in methods to easily perform nearly any operation
+you might be interested in. Where they break down is when you wish to work with
+large arrays of dates and times: just as lists of Python numerical variables are suboptimal compared to NumPy-style typed numerical arrays, lists of Python datetime
+objects are suboptimal compared to typed arrays of encoded dates.
+\subsection*{Typed Arrays of Times: NumPy's datetime64}
+NumPy's datetime64 dtype encodes dates as 64-bit integers, and thus allows arrays of
+dates to be represented compactly and operated on in an efficient manner. The
+datetime64 requires a specific input format. Once we have dates in this form, we can quickly do vectorized operations on it.
+
+One detail of the datetime64 and related timedelta64 objects is that they are built on
+a \emph{fundamental time unit}. Because the datetime64 object is limited to 64-bit precision,
+the range of encodable times is $2^{64}$ times this fundamental unit. In other words,
+datetime64 imposes a trade-off between time resolution and maximum time span.
+
+For example, if you want a time resolution of 1 nanosecond, you only have enough
+information to encode a range of $2^{64}$ nanoseconds, or just under 600 years. NumPy
+will infer the desired unit from the input.
+
+You can force any desired fundamental unit using one of many format codes. \autoref{tab23-1}, drawn from the NumPy datetime64 documentation, lists the available
+format codes along with the relative and absolute time spans that they can encode.
+
+\begin{table}
+    \centering
+    \caption{Description of date and time codes}
+    \label{tab23-1}
+    \begin{tabular}{llll}
+        \hline
+        Code & Meaning     & Time span (relative) & Time span (absolute)   \\
+        \hline
+        Y    & Year        & $\pm$ 9.2e18 years   & [9.2e18 BC, 9.2e18 AD] \\
+        M    & Month       & $\pm$ 7.6e17 years   & [7.6e17 BC, 7.6e17 AD] \\
+        W    & Week        & $\pm$ 1.7e17 years   & [1.7e17 BC, 1.7e17 AD] \\
+        D    & Day         & $\pm$ 2.5e16 years   & [2.5e16 BC, 2.5e16 AD] \\
+        h    & Hour        & $\pm$ 1.0e15 years   & [1.0e15 BC, 1.0e15 AD] \\
+        m    & Minute      & $\pm$ 1.7e13 years   & [1.7e13 BC, 1.7e13 AD] \\
+        s    & Second      & $\pm$ 2.9e12 years   & [ 2.9e9 BC, 2.9e9 AD]  \\
+        ms   & Millisecond & $\pm$ 2.9e9 years    & [ 2.9e6 BC, 2.9e6 AD]  \\
+        us   & Microsecond & $\pm$ 2.9e6 years    & [290301 BC, 294241 AD] \\
+        ns   & Nanosecond  & $\pm$ 292 years      & [ 1678 AD, 2262 AD]    \\
+        ps   & Picosecond  & $\pm$ 106 days       & [ 1969 AD, 1970 AD]    \\
+        fs   & Femtosecond & $\pm$ 2.6 hours      & [ 1969 AD, 1970 AD]    \\
+        as   & Attosecond  & $\pm$ 9.2 seconds    & [ 1969 AD, 1970 AD]    \\
+        \hline
+    \end{tabular}
+\end{table}
+
+For the types of data we see in the real world, a useful default is datetime64[ns], as it
+can encode a useful range of modern dates with a suitably fine precision.
+
+Finally, note that while the datetime64 data type addresses some of the deficiencies of
+the built-in Python datetime type, it lacks many of the convenient methods and
+functions provided by datetime and especially dateutil.
+
+\subsubsection*{Dates and Times in Pandas: The Best of Both Worlds}
+Pandas builds upon all the tools just discussed to provide a Timestamp object, which
+combines the ease of use of datetime and dateutil with the efficient storage and
+vectorized interface of numpy.datetime64. From a group of these Timestamp objects,
+Pandas can construct a DatetimeIndex that can be used to index data in a Series or
+DataFrame.
+
+\section{Pandas Time Series: Indexing by Time}
+The Pandas time series tools really become useful when you begin to index data by
+timestamps.
+
+\section{Pandas Time Series Data Structures}
+This section will introduce the fundamental Pandas data structures for working with
+time series data:
+\begin{itemize}
+    \item For timestamps, Pandas provides the Timestamp type. As mentioned before, this
+          is essentially a replacement for Python's native datetime, but it's based on the
+          more efficient numpy.datetime64 data type. The associated Index structure is
+          DatetimeIndex.
+    \item For time periods, Pandas provides the Period type. This encodes a fixed-
+          frequency interval based on numpy.datetime64. The associated index structure is
+          PeriodIndex.
+    \item For time deltas or durations, Pandas provides the Timedelta type. Timedelta is a
+          more efficient replacement for Python's native datetime.timedelta type, and is
+          based on numpy.timedelta64. The associated index structure is TimedeltaIndex.
+\end{itemize}
+
+The most fundamental of these date/time objects are the Timestamp and Datetime
+Index objects. While these class objects can be invoked directly, it is more common to
+use the \verb|pd.to_datetime| function, which can parse a wide variety of formats. Passing
+a single date to \verb|pd.to_datetime| yields a Timestamp; passing a series of dates by
+default yields a DatetimeIndex.
+
+Any DatetimeIndex can be converted to a PeriodIndex with the \verb|to_period| function,
+with the addition of a frequency code.
+
+A TimedeltaIndex is created when a date is subtracted from another.
+
+\section{Regular Sequences: pd.date\_range}
+To make creation of regular date sequences more convenient, Pandas offers a few
+functions for this purpose: \verb|pd.date_range| for timestamps, \verb|pd.period_range| for
+periods, and \verb|pd.timedelta_range| for time deltas.
+
+\verb|pd.date_range| accepts a start date, an end date, and an optional
+frequency code to create a regular sequence of dates. Alternatively, the date range can be specified not with a start and end point, but with
+a start point and a number of periods. The spacing can be modified by altering the freq argument, which defaults to D.
+
+
+To create regular sequences of Period or Timedelta values, the similar
+\verb|pd.period_range| and \verb|pd.timedelta_range| functions are useful.
+
+\section{Frequencies and Offsets}
+Fundamental to these Pandas time series tools is the concept of a frequency or date
+offset. \autoref{tab23-2} summarizes the main codes available.
+\begin{table}
+    \centering
+    \caption{Listing of Pandas frequency codes}
+    \label{tab23-2}
+    \begin{tabular}{llll}
+        \hline
+        Code & Description  & Code & Description          \\
+        \hline
+        D    & Calendar day & B    & Business day         \\
+        W    & Weekly       &      &                      \\
+        M    & Month end    & BM   & Business month end   \\
+        Q    & Quarter end  & BQ   & Business quarter end \\
+        A    & Year end     & BA   & Business year end    \\
+        H    & Hours        & BH   & Business hours       \\
+        T    & Minutes      &      &                      \\
+        S    & Seconds      &      &                      \\
+        L    & Milliseconds &      &                      \\
+        U    & Microseconds &      &                      \\
+        N    & Nanoseconds  &      &                      \\
+        \hline
+    \end{tabular}
+\end{table}
+
+The monthly, quarterly, and annual frequencies are all marked at the end of the specified period. Adding an S suffix to any of these causes them to instead be marked at
+the beginning (see \autoref{tab23-3}).
+
+
+Additionally, you can change the month used to mark any quarterly or annual code
+by adding a three-letter month code as a suffix(比如说美股的财年是任意的):
+\begin{itemize}
+    \item Q-JAN, BQ-FEB, QS-MAR, BQS-APR, etc.
+    \item A-JAN, BA-FEB, AS-MAR, BAS-APR, etc.
+\end{itemize}
+
+In the same way, the split point of the weekly frequency can be modified by adding a
+three-letter weekday code: W-SUN, W-MON, W-TUE, W-WED, etc.
+
+All of these short codes refer to specific instances of Pandas time series offsets, which
+can be found in the pd.tseries.offsets module.
+
+\begin{table}
+    \centering
+    \caption{Listing of start-indexed frequency codes}
+    \label{tab23-3}
+    \begin{tabular}{llll}
+        \hline
+        Code & Description   & Code & Description            \\
+        \hline
+        MS   & Month start   & BMS  & Business month start   \\
+        QS   & Quarter start & BQS  & Business quarter start \\
+        AS   & Year start    & BAS  & Business year start    \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\section{Resampling, Shifting, and Windowing}
+The ability to use dates and times as indices to intuitively organize and access data is
+an important aspect of the Pandas time series tools. The benefits of indexed data in
+general (automatic alignment during operations, intuitive data slicing and access,
+etc.) still apply, and Pandas provides several additional time series–specific
+operations.
+\subsection*{Resampling and Converting Frequencies}
+One common need when dealing with time series data is resampling at a higher or
+lower frequency. This can be done using the resample\marginpar[resample]{resample} method, or the much simpler
+asfreq\marginpar[asfreq]{asfreq} method. \important{The primary difference between the two is that resample is fundamentally a data aggregation, while asfreq is fundamentally a data selection.}
+
+Let's compare what the two return when we downsample(下采样) the S\&P 500 closing price
+data.\autoref{Resampling of SP500 closing price} shows
+the result.
+\figures{Resampling of SP500 closing price}
+Notice the difference(\autoref{Resampling of SP500 closing price}): at each point, \tips{resample reports the average of the previous year,
+    while asfreq reports the value at the end of the year.}
+
+For upsampling, resample and asfreq are largely equivalent, though resample has
+many more options available. In this case, the default for both methods is to leave the
+upsampled points empty; that is, filled with NA values. asfreq accepts a method argument to specify how values are
+imputed. Here, we will resample the business day data at a daily frequency (i.e.,
+including weekends); \autoref{Comparison between forward-fill and back-fill interpolation} shows the result. Because the S\&P 500 data only exists for business days, the top panel has gaps representing NA values. The bottom panel shows the differences between two strategies for
+filling the gaps: forward filling and backward filling.
+
+\figures{Comparison between forward-fill and back-fill interpolation}
+\subsection*{Time Shifts}
+Another common time series–specific operation is shifting of data in time. For this,
+Pandas provides the shift\marginpar[shift]{shift} method, which can be used to shift data by a given number of entries. With time series data sampled at a regular frequency, this can give us a
+way to explore trends over time.(比如说要计算资产收益率，一年期的)
+
+\subsection*{Rolling Windows}
+Calculating rolling statistics is a third type of time series–specific operation implemented by Pandas. This can be accomplished via the rolling attribute of Series and
+DataFrame objects, which returns a view similar to what we saw with the groupby
+operation (see \autoref{Ch20}). This rolling view makes available a number of aggregation operations by default.

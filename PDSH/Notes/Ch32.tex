@@ -1,0 +1,51 @@
+\chapter{Text and Annotation\label{Ch32}}
+Creating a good visualization involves guiding the reader so that the figure tells a
+story. In some cases, this story can be told in an entirely visual manner, without the
+need for added text, but in others, small textual cues and labels are necessary. Perhaps
+the most basic types of annotations you will use are axes labels and titles, but the
+options go beyond this.
+
+When we're visualizing data, it is often useful to annotate certain features of
+the plot to draw the reader's attention. This can be done manually with the \verb|plt.text|\marginpar[plt.text]{plt.text}/
+\verb|ax.text|\marginpar[ax.text]{ax.text} functions, which will place text at a particular $x$/$y$ value.
+
+The ax.text method takes an $x$ position, a $y$ position, a string, and then optional keywords specifying the color, size, style, alignment, and other properties of the text.
+Here we used \verb|ha='right'| and \verb|ha='center'|, where \verb|ha| is short for \emph{horizontal alignment}.
+
+\section{Transforms and Text Position}
+In the previous example, we anchored our text annotations to data locations. Sometimes it's preferable to anchor the text to a fixed position on the axes or figure, independent of the data. In Matplotlib, this is done by modifying the transform.
+
+Matplotlib makes use of a few different coordinate systems: a data point at
+$(x, y) = (1, 1)$ corresponds to a certain location on the axes or figure, which in turn
+corresponds to a particular pixel on the screen. Mathematically, transforming
+between such coordinate systems is relatively straightforward, and Matplotlib has a
+well-developed set of tools that it uses internally to perform these transforms.
+
+A typical user rarely needs to worry about the details of the transforms, but it is helpful knowledge to have when considering the placement of text on a figure. There are
+three predefined transforms that can be useful in this situation:
+\begin{itemize}
+    \item \textbf{ax.transData}: Transform associated with data coordinates
+    \item \textbf{ax.transAxes}: Transform associated with the axes (in units of axes dimensions)
+    \item \textbf{fig.transFigure}: Transform associated with the figure (in units of figure dimensions)
+\end{itemize}
+
+\figures{Comparing Matplotlib coordinate systems}
+
+The transData coordinates give the usual data coordinates associated with the x- and
+y-axis labels. The transAxes coordinates give the location from the bottom-left corner of the axes (the white box), as a fraction of the total axes size. The transFig
+ure coordinates are similar, but specify the position from the bottom-left corner of
+the figure (the gray box) as a fraction of the total figure size.
+
+\important{Notice now that if we change the axes limits, it is only the transData coordinates that
+    will be affected, while the others remain stationary. }
+
+\section{Arrows and Annotation}
+Along with tickmarks and text, another useful annotation mark is the simple arrow.
+
+I'd suggest using the \verb|plt.annotate|\marginpar[plt.annotate]{plt.annotate} function, which creates some text and an arrow and allows the arrows to be very flexibly
+specified.
+
+More discussion and examples of available arrow and annotation styles can be found
+in the Matplotlib \href{https://matplotlib.org/stable/tutorials/text/annotations.html}{Annotations tutorial}.
+
+\figures{Annotated average birth rates by day}

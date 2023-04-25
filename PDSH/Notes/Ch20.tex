@@ -1,0 +1,129 @@
+\chapter{Aggregation and Grouping\label{Ch20}}
+A fundamental piece of many data analysis tasks is efficient summarization: computing aggregations like sum, mean, median, min, and max, in which a single number summarizes aspects of a potentially large dataset.
+\section{Planets Data}
+Here we will use the Planets dataset, available via the Seaborn package. It gives information on planets that astronomers have discovered around
+other stars (known as extrasolar planets(系外星系), or exoplanets for short).
+\section{Simple Aggregation in Pandas}
+As with a one-dimensional NumPy array, for a Pandas Series the aggregates return a
+single value.
+
+For a DataFrame, by default the aggregates return results within each column. By specifying the axis argument, you can instead aggregate within each row.
+
+Pandas Series and DataFrame objects include all of the common aggregates mentioned in \autoref{Ch07}; in addition, there is a convenience method, \verb|describe|\marginpar[describe]{describe}, that computes several common aggregates for each column and returns the result.
+
+\autoref{Listing of Pandas aggregation methods} summarizes some other built-in Pandas aggregations.
+
+\begin{table}
+    \centering
+    \caption{Listing of Pandas aggregation methods}
+    \label{Listing of Pandas aggregation methods}
+    \begin{tabular}{ll}
+        \hline
+        Aggregation  & Returns                         \\
+        \hline
+        count        & Total number of items           \\
+        first, last  & First and last item             \\
+        mean, median & Mean and median                 \\
+        min, max     & Minimum and maximum             \\
+        std, var     & Standard deviation and variance \\
+        mad          & Mean absolute deviation         \\
+        prod         & Product of all items            \\
+        sum          & Sum of all items                \\
+        \hline
+    \end{tabular}
+\end{table}
+\section{groupby: Split, Apply, Combine}
+Simple aggregations can give you a flavor of your dataset, but often we would prefer
+to aggregate conditionally on some label or index: this is implemented in the so-called groupby operation.
+\subsection*{Split, Apply, Combine}
+A canonical example of this split-apply-combine operation, where the “apply” is a summation aggregation, is illustrated \autoref{A visual representation of a groupby operation}.
+
+\autoref{A visual representation of a groupby operation} shows what the groupby operation accomplishes:
+\begin{itemize}
+    \item The split step involves breaking up and grouping a DataFrame depending on the value of the specified key.
+    \item The apply step involves computing some function, usually an aggregate, transformation, or filtering, within the individual groups.
+    \item The combine step merges the results of these operations into an output array.
+\end{itemize}
+
+\figures{A visual representation of a groupby operation}
+
+The power of the groupby is that it
+abstracts away these steps: the user need not think about how the computation is
+done under the hood, but rather can think about the operation as a whole.
+
+The most basic split-apply-combine operation can be computed with the groupby
+method of the DataFrame, passing the name of the desired key column.
+
+Notice that what is returned is a DataFrameGroupBy object, not a set of DataFrame
+objects. This object is where the magic is: you can think of it as a special view of the
+DataFrame, which is poised to dig into the groups but does no actual computation
+until the aggregation is applied.
+\subsection*{The GroupBy Object}
+The GroupBy object is a flexible abstraction: in many ways, it can be treated as simply
+a collection of DataFrames, though it is doing more sophisticated things under the
+hood.
+
+Perhaps the most important operations made available by a GroupBy are aggregate,
+filter, transform, and apply.
+\subsubsection*{Column indexing}
+The GroupBy object supports column indexing in the same way as the DataFrame, and returns a modified GroupBy object.
+
+\subsubsection*{Iteration over groups}
+
+The GroupBy object supports direct iteration over the groups, returning each group as
+a Series or DataFrame. This can be useful for manual inspection of groups for the sake of debugging, but it is
+often much faster to use the built-in apply functionality
+\subsubsection*{Dispatch methods}
+Through some Python class magic, any method not explicitly implemented by the
+GroupBy object will be passed through and called on the groups, whether they are
+DataFrame or Series objects.
+
+Notice that these dispatch methods are applied to each individual group, and the
+results are then combined within GroupBy and returned. Again, any valid DataFrame/Series method can be called in a similar manner on the corresponding GroupBy
+object.
+\subsection*{Aggregate, Filter, Transform, Apply}
+GroupBy objects have aggregate, fil
+ter, transform, and apply methods that efficiently implement a variety of useful
+operations before combining the grouped data.
+\subsubsection*{Aggregation}
+You're now familiar with GroupBy aggregations with sum, median, and the like, but the
+aggregate method allows for even more flexibility. It can take a string, a function, or
+a list thereof, and compute all the aggregates at once.
+
+Another common pattern is to pass a dictionary mapping column names to operations to be applied on that column.
+
+\subsubsection*{Filtering}
+A filtering operation allows you to drop data based on the group properties. For
+example, we might want to keep all groups in which the standard deviation is larger
+than some critical value.
+
+The filter function should \important{return a Boolean value} specifying whether the group passes
+the filtering.
+\subsubsection*{Transformation}
+While aggregation must return a reduced version of the data, transformation can
+return some transformed version of the full data to recombine. For such a transformation, the output is the same shape as the input. A common example is to center the
+data by subtracting the group-wise mean
+\subsubsection*{The apply method}
+The apply method lets you apply an arbitrary function to the group results. The
+function should take a DataFrame and returns either a Pandas object (e.g., DataFrame,
+Series) or a scalar; the behavior of the combine step will be tailored to the type of
+output returned.
+
+apply within a GroupBy is flexible: the only criterion is that the function takes a
+DataFrame and returns a Pandas object or scalar.
+\subsection*{Specifying the Split Key}
+In the simple examples presented before, we split the DataFrame on a single column
+name. This is just one of many options by which the groups can be defined.
+\subsubsection*{A list, array, series, or index providing the grouping keys}
+The key can be any series or list with a length matching that of the DataFrame.
+
+
+\subsubsection*{A dictionary or series mapping index to group}
+Another method is to provide a dictionary that \important{maps index values to the group keys}.
+\subsubsection*{Any Python function}
+Similar to mapping, you can pass any Python function that will input the index value
+and output the group.
+
+\subsubsection*{A list of valid keys}
+Further, any of the preceding key choices can be combined to group on a multi-index.
+\subsection*{Grouping Example}

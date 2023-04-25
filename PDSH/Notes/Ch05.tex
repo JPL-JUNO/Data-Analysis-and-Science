@@ -1,0 +1,84 @@
+\chapter{The Basics of NumPy Arrays}
+We'll cover a few categories of basic array manipulations here:
+\begin{enumerate}
+    \item \emph{Attributes of arrays}: Determining the size, shape, memory consumption, and data types of arrays
+    \item \emph{Indexing of arrays}: Getting and setting the values of individual array elements
+    \item \emph{Slicing of arrays}: Getting and setting smaller subarrays within a larger array
+    \item \emph{Reshaping of arrays}: Changing the shape of a given array
+    \item \emph{Joining and splitting of arrays}: Combining multiple arrays into one, and splitting one array into many
+\end{enumerate}
+
+\section{NumPy Array Attributes}
+Each array has attributes including ndim (the number of dimensions), shape (the size of each dimension), size (the total size of the array), and dtype (the type of each element)
+
+\section{Array Indexing: Accessing Single Elements}
+\begin{itemize}
+    \item In a one-dimensional array, the ith value (counting from zero) can be accessed by specifying the desired index in square brackets, just as with Python lists
+    \item To index from the end of the array, you can use negative indices
+    \item In a multidimensional array, items can be accessed using a comma-separated (row, column) tuple
+    \item Keep in mind that, unlike Python lists, NumPy arrays have a fixed type. This means, for example, that \important{if you attempt to insert a floating-point value into an integer array, the value will be silently truncated}. Don't be caught unaware by this behavior!
+\end{itemize}
+
+\section{Array Slicing: Accessing Subarrays}
+Just as we can use square brackets to access individual array elements, we can also use
+them to access subarrays with the slice notation, marked by the colon (:) character.
+The NumPy slicing syntax follows that of the standard Python list; to access a slice of
+an array x, use this:
+
+\verb|x[start:stop:step]|
+
+If any of these are unspecified, they default to the values \verb|start=0, stop=<size of dimension>, step=1|.
+
+\subsection{One-Dimensional Subarrays}
+A potentially confusing case is when the step value is negative. In this case, the
+defaults for start and stop are swapped. This becomes a convenient way to reverse
+an array. 如果step大于0，则start要小于stop，反之要大于，因为每一步之后要进行step处理。
+\subsection{Multidimensional Subarrays}
+Multidimensional slices work in the same way, with multiple slices separated by commas.
+
+One commonly needed routine is accessing single rows or columns of an array. This
+can be done by combining indexing and slicing, using an empty slice marked by a
+single colon (:).
+
+In the case of row access, the empty slice can be omitted for a more compact syntax
+\subsection{Subarrays as No-Copy Views}
+\important{Unlike Python list slices, NumPy array slices are returned as \emph{views}\marginpar[views]{views} rather than \emph{copies} of the array data.}
+
+Now if we modify this subarray, we'll see that the original array is changed!
+
+Some users may find this surprising, but it can be advantageous: for example, when
+working with large datasets, we can access and process pieces of these datasets
+without the need to copy the underlying data buffer.
+\subsection{Creating Copies of Arrays}
+
+\section{Reshaping of Arrays}
+
+Another useful type of operation is reshaping of arrays, which can be done with the
+\verb|reshape| method. In most cases the reshape method will return a no-copy view of
+the initial array.
+
+A common reshaping operation is converting a one-dimensional array into a two-dimensional row or column matrix.
+
+A convenient shorthand for this is to use \verb|np.newaxis| in the slicing syntax.
+
+\section{Array Concatenation and Splitting}
+\subsection{Concatenation of Arrays}
+
+Concatenation, or joining of two arrays in NumPy, is primarily accomplished using
+the routines \verb|np.concatenate|, \verb|np.vstack|, and \verb|np.hstack|. \verb|np.concatenate| takes a
+tuple or list of arrays as its first argument.
+
+For working with arrays of mixed dimensions, it can be clearer to use the np.vstack
+(vertical stack) and np.hstack (horizontal stack) functions.
+
+
+Similarly, for higher-dimensional arrays, np.dstack will stack arrays along the third
+axis.
+
+\subsection{Splitting of Arrays}
+The opposite of concatenation is splitting, which is implemented by the functions
+\verb|np.split|, \verb|np.hsplit|, and \verb|np.vsplit|. For each of these, we can pass a list of indices
+giving the split points.
+
+Notice that $N$ split points leads to $N + 1$ subarrays. The related functions np.hsplit
+and np.vsplit are similar.

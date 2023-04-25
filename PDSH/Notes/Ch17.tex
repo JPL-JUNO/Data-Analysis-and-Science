@@ -1,0 +1,118 @@
+\chapter{Hierarchical Indexing\label{Ch17}}
+A far more common pattern for handling
+higher-dimensional data is to make use of hierarchical indexing (also known as multi-
+indexing) to incorporate multiple index levels within a single index.
+\section{A Multiply Indexed Series}
+Let’s start by considering how we might represent two-dimensional data within a
+one-dimensional Series.
+
+Our tuple-based indexing is essentially a
+rudimentary multi-index, and the Pandas MultiIndex type gives us the types of oper‐
+ations we wish to have. We can create a multi-index from the tuples.
+
+The MultiIndex represents multiple levels of indexing as well as multiple labels for each data point which encode these
+levels.
+
+In this multi-index representation, any blank entry indicates the
+same value as the line above it.
+
+\subsection*{MultiIndex as Extra Dimension}
+
+The unstack\marginpar[unstack]{unstack} method will quickly convert a multiply
+indexed Series into a conventionally indexed DataFrame. Naturally, the stack\marginpar[stack]{stack} method provides the opposite operation.
+
+你可能会纠结于为什么要费时间研究层级索引。其实理由很简单：如果我们可以用含多级
+索引的一维 Series 数据表示二维数据，那么我们就可以用 Series 或 DataFrame 表示三维
+甚至更高维度的数据。多级索引每增加一级，就表示数据增加一维，利用这一特点就可以
+轻松表示任意维度的数据了。
+
+In addition, all the ufuncs and other functionality discussed in \autoref{Ch15} work with
+hierarchical indices as well.
+\section{Methods of MultiIndex Creation}
+The most straightforward way to construct a multiply indexed Series or DataFrame
+is to simply pass a list of two or more index arrays to the constructor.(我个人觉得这种两层索引或者少量层索引还有合适，多层索引的话 List 嵌套根本看不出来)
+
+Similarly, if you pass a dictionary with appropriate tuples as keys, Pandas will automatically recognize this and use a MultiIndex by default.
+
+\subsection*{Explicit MultiIndex Constructors}
+For more flexibility in how the index is constructed, you can instead use the constructor methods available in the \verb|pd.MultiIndex| class.
+
+You can construct a MultiIndex from a simple list of arrays giving the index values
+within each level, or you can construct it from a list of tuples giving the multiple index values of each point.
+
+ou can even construct it from a Cartesian product of single indices.
+
+Similarly, you can construct a MultiIndex directly using its internal encoding by
+passing levels (a list of lists containing available index values for each level) and
+codes (a list of lists that reference these labels).
+
+Any of these objects can be passed as the index argument when creating a Series or
+DataFrame, or be passed to the reindex method of an existing Series or DataFrame.
+
+\subsection*{MultiIndex Level Names}
+
+Sometimes it is convenient to name the levels of the MultiIndex. This can be accomplished by passing the names argument to any of the previously discussed MultiIndex
+constructors, or by setting the names\marginpar[names]{names} attribute of the index after the fact.
+
+\subsection*{MultiIndex for Columns}
+In a DataFrame, the rows and columns are completely symmetric, and just as the rows
+can have multiple levels of indices, the columns can have multiple levels as well.
+\section{Indexing and Slicing a MultiIndex}
+\subsection*{Multiply Indexed Series}
+We can access single elements by indexing with multiple terms.
+
+The MultiIndex also supports partial indexing, or indexing just one of the levels in
+the index. The result is another Series, with the lower-level indices maintained.
+
+Partial slicing is available as well, as long as the MultiIndex is sorted.(需要索引是排序的) With sorted indices, partial indexing can be performed on lower levels by passing an
+empty slice in the first index.
+
+Other types of indexing and selection (discussed in \autoref{Ch14}) work as well.
+
+\subsection*{Multiply Indexed DataFrames}
+
+Remember that columns are primary in a DataFrame, and the syntax used for multiply indexed Series applies to the columns.
+
+Also, as with the single-index case, we can use the loc, iloc, and ix indexers introduced in \autoref{Ch14}.
+
+These indexers provide an array-like view of the underlying two-dimensional data,
+but each individual index in loc or iloc can be passed a tuple of multiple indices.
+
+Working with slices within these index tuples is not especially convenient; trying to
+create a slice within a tuple will lead to a syntax error
+
+You could get around this by building the desired slice explicitly using Python’s built-
+in slice function, but a better way in this context is to use an IndexSlice\marginpar[IndexSlice]{IndexSlice} object,
+which Pandas provides for precisely this situation.
+
+\section{Rearranging Multi-Indexes}
+One of the keys to working with multiply indexed data is knowing how to effectively
+transform the data. There are a number of operations that will preserve all the information in the dataset, but rearrange it for the purposes of various computations.
+\subsection{Sorted and Unsorted Indices}
+\important{Many of the
+    MultiIndex slicing operations will fail if the index is not sorted.}
+
+We’ll start by creating some simple multiply indexed data where the indices are not
+lexographically sorted(不是按照字典排序的).
+
+
+For various reasons, partial slices and other similar operations require the levels in the MultiIndex to be in sorted (i.e., lexographical) order.
+Pandas provides a number of convenience routines to perform this type of sorting,
+such as the \verb|sort_index| and \verb|sortlevel| methods of the DataFrame.
+
+\subsection*{Stacking and Unstacking Indices}
+As we saw briefly before, it is possible to convert a dataset from a stacked multi-index
+to a simple two-dimensional representation, optionally specifying the level to use.
+
+The opposite of unstack\marginpar[unstack]{unstack} is stack\marginpar[stack]{stack}, which here can be used to recover the original
+series.
+
+\subsection*{Index Setting and Resetting}
+Another way to rearrange hierarchical data is to turn the index labels into columns;
+this can be accomplished with the \verb|reset_index|\marginpar[reset\_index]{reset\_index} method. Calling this on the population dictionary will result in a DataFrame with state and year columns holding the
+information that was formerly in the index. For clarity, we can optionally specify the
+name of the data for the column representation.
+
+A common pattern is to build a MultiIndex from the column values. This can be
+done with the \verb|set_index|\marginpar[set\_index]{set\_index} method of the DataFrame, which returns a multiply indexed
+DataFrame

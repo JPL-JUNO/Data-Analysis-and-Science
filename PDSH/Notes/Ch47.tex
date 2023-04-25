@@ -1,0 +1,57 @@
+\chapter{In Depth: k-Means Clustering\label{Ch47}}
+Now we will move on to another class of unsupervised
+machine learning models: clustering algorithms. Clustering algorithms seek to learn,
+from the properties of the data, an optimal division or discrete labeling of groups of
+points.
+\section{Introducing k-Means}
+The k-means algorithm searches for a predetermined number of clusters within an
+unlabeled multidimensional dataset. It accomplishes this using a simple conception of
+what the optimal clustering looks like:
+\begin{itemize}
+    \item The \textbf{cluster center} is the arithmetic mean of all the points belonging to the cluster.
+    \item Each point is closer to its own cluster center than to other cluster centers.
+\end{itemize}
+Those two assumptions are the basis of the k-means model.
+
+\section{Expectation–Maximization}
+In short,
+the expectation–maximization approach in k-means consists of the following procedure:
+\begin{enumerate}
+    \item Guess some cluster centers.
+    \item Repeat until converged:
+          \begin{enumerate}
+              \item E-step: Assign points to the nearest cluster center.
+              \item M-step: Set the cluster centers to the mean of their assigned points.
+          \end{enumerate}
+\end{enumerate}
+Here the E-step or expectation step is so named because it involves updating our
+expectation of which cluster each point belongs to. The M-step or maximization step
+is so named because it involves maximizing some fitness function that defines the
+locations of the cluster centers—in this case, that maximization is accomplished by
+taking a simple mean of the data in each cluster.
+
+There are a few caveats to be aware of when using the expectation–maximization
+algorithm:
+\paragraph{\textit{The globally optimal result may not be achieved}} First, although the E–M procedure is guaranteed to improve the result in each
+step, there is no assurance that it will lead to the global best solution.
+
+\paragraph{\textit{The number of clusters must be selected beforehand}} Another common challenge with k-means is that you must tell it how many clusters you expect: it cannot learn the number of clusters from the data.
+
+Whether the result is meaningful is a question that is difficult to answer definitively; one approach that is rather intuitive, but that we won’t discuss further
+here, is called \href{https://scikit-learn.org/stable/auto_examples/cluster/plot_kmeans_silhouette_analysis.html}{silhouette analysis}.
+
+Alternatively, you might use a more complicated clustering algorithm that has a
+better quantitative measure of the fitness per number of clusters (e.g., Gaussian
+mixture models;) or which can choose a suitable number of clusters (e.g., DBSCAN, mean-shift, or affinity propagation, all available in the
+sklearn.cluster submodule).
+
+\paragraph{\textit{k-means is limited to linear cluster boundaries}} The fundamental model assumptions of k-means (points will be closer to their own cluster center than to others) means that the algorithm will often be ineffective if the clusters have complicated geometries.
+
+\figures{Failure of k-means with nonlinear boundaries}
+
+\paragraph{\textit{k-means can be slow for large numbers of samples}} Because each iteration of k-means must access every point in the dataset, the
+algorithm can be relatively slow as the number of samples grows. You might
+wonder if this requirement to use all data at each iteration can be relaxed; for
+example, you might just use a subset of the data to update the cluster centers at
+each step. This is the idea behind batch-based k-means algorithms, one form of
+which is implemented in sklearn.cluster.MiniBatchKMeans.

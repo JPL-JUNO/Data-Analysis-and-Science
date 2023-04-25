@@ -1,0 +1,51 @@
+\chapter{Customizing Matplotlib: Configurations and Stylesheets\label{Ch34}}
+While many of the topics covered in previous chapters involve adjusting the style of
+plot elements one by one, Matplotlib also offers mechanisms to adjust the overall
+style of a chart all at once. In this chapter we'll walk through some of Matplotlib's runtime configuration (\textbf{rc}) options, and take a look at the stylesheets feature, which
+contains some nice sets of default configurations.
+
+\section{Plot Customization by Hand}
+
+\section{Changing the Defaults: rcParams}
+Each time Matplotlib loads, it defines a runtime configuration containing the default
+styles for every plot element you create. This configuration can be adjusted at any
+time using the \verb|plt.rc|\marginpar[plt.rc]{plt.rc} convenience routine.
+
+Optionally, these settings can be saved in a \textbf{.matplotlibrc} file.
+
+\section{Stylesheets}
+A newer mechanism for adjusting overall chart styles is via Matplotlib's style module, which includes a number of default stylesheets, as well as the ability to create and
+package your own styles. These stylesheets are formatted similarly to the \textbf{.matplotlibrc}
+files mentioned earlier, but must be named with a \textbf{.mplstyle} extension.
+Even if you don't go as far as creating your own style, you may find what you're looking for in the built-in stylesheets. \verb|plt.style.available| contains a list of the available styles.
+
+The standard way to switch to a stylesheet is to call \verb|style.use|.
+
+\important{But keep in mind that this will change the style for the rest of the Python session!
+    Alternatively, you can use the style context manager, which sets a style temporarily.}
+
+\subsection*{Default Style}
+Matplotlib's default style was updated in the version 2.0 release.
+
+\subsection*{FiveThirtyEight Style}
+The fivethirtyeight style mimics the graphics found on the popular \href{https://fivethirtyeight.com/}{FiveThirtyEight website}. It is typified by bold colors, thick lines, and transparent axes.
+
+\subsection*{ggplot Style}
+The ggplot package in the R language is a popular visualization tool among data scientists. Matplotlib's ggplot style mimics the default styles from that package.
+
+\subsection*{Bayesian Methods for Hackers Style}
+There is a neat short online book called \href{https://dataorigami.net/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers/}{Probabilistic Programming and Bayesian Methods for Hackers} by Cameron Davidson-Pilon that features figures created with
+Matplotlib, and uses a nice set of rc parameters to create a consistent and visually
+appealing style throughout the book. This style is reproduced in the bmh stylesheet.
+
+\subsection*{Dark Background Style}
+For figures used within presentations, it is often useful to have a dark rather than light
+background. The \verb|dark_background| style provides this.
+
+\subsection*{Grayscale Style}
+You might find yourself preparing figures for a print publication that does not accept
+color figures. For this, the grayscale style can be useful.
+
+\subsection*{Seaborn Style}
+Matplotlib also has several stylesheets inspired by the Seaborn library. I've found these settings to be very nice, and tend to use
+them as defaults in my own data exploration

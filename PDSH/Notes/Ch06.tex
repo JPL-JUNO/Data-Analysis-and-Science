@@ -1,0 +1,135 @@
+\chapter{Computation on NumPy Arrays:Universal Functions\label{Ch06}}
+Computation on NumPy arrays can be very fast, or it can be very slow. The key to
+making it fast is to use vectorized operations, generally implemented through NumPy's \emph{universal functions} (ufuncs).
+\section{The Slowness of Loops}
+This is partly due to the dynamic, interpreted nature of the language; types are
+flexible, so sequences of operations cannot be compiled down to efficient machine
+code as in languages like C and Fortran.
+
+The relative sluggishness of Python generally manifests itself in situations where
+many small operations are being repeated.
+
+\section{Introducing Ufuncs}
+For many types of operations, NumPy provides a convenient interface into just this
+kind of statically typed, compiled routine. This is known as a \emph{vectorized} operation.
+
+Vectorized operations in NumPy are implemented via ufuncs, whose main purpose is
+to quickly execute repeated operations on values in NumPy arrays.
+
+Any time you see such a loop in a NumPy script, you should consider
+whether it can be replaced with a vectorized expression.
+
+\section{Exploring NumPy's Ufuncs}
+Ufuncs exist in two flavors: \textbf{unary ufuncs}, which operate on a single input, and \textbf{binary
+    ufuncs}, which operate on two inputs.
+
+\subsection*{Array Arithmetic}
+NumPy's ufuncs feel very natural to use because they make use of Python's native
+arithmetic operators. The standard addition, subtraction, multiplication, and division
+can all be used.
+
+All of these arithmetic operations are simply convenient wrappers around specific
+ufuncs built into NumPy.
+
+\autoref{Arithmetic operators implemented in NumPy} lists the arithmetic operators implemented in NumPy.
+
+\begin{table}
+    \centering
+    \caption{Arithmetic operators implemented in NumPy}
+    \label{Arithmetic operators implemented in NumPy}
+    \begin{tabular}{lll}
+        \hline
+        Operator  & Equivalent ufunc       & Description                          \\
+        \hline
+        \verb|+|  & \verb|np.add|          & Addition (e.g., 1 + 1 = 2)           \\
+        \verb|-|  & \verb|np.subtract|     & Subtraction (e.g., 3 - 2 = 1)        \\
+        \verb|-|  & \verb|np.negative|     & Unary negation (e.g., -2)            \\
+        \verb|*|  & \verb|np.multiply|     & Multiplication (e.g., 2 * 3 = 6)     \\
+        \verb|/|  & \verb|np.divide|       & Division (e.g., 3 / 2 = 1.5)         \\
+        \verb|//| & \verb|np.floor_divide| & Floor division (e.g., 3 // 2 = 1)    \\
+        \verb|**| & \verb|np.power|        & Exponentiation (e.g., 2 ** 3 = 8)    \\
+        \verb|%|  & \verb|np.mod|          & Modulus/remainder (e.g., 9 \% 4 = 1) \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Additionally, there are Boolean/bitwise operators.
+
+\subsection*{Absolute Value}
+
+Just as NumPy understands Python's built-in arithmetic operators, it also understands
+Python's built-in absolute value function.
+
+The corresponding NumPy ufunc is \verb|np.absolute|, which is also available under the
+alias \verb|np.abs|.
+
+This ufunc can also handle complex data, in which case it returns the magnitude.
+
+\subsection*{Trigonometric Functions}
+NumPy provides a large number of useful ufuncs, and some of the most useful for the
+data scientist are the trigonometric functions. Inverse trigonometric functions are also
+available. The values are computed to within machine precision, which is why values that should be zero do not always hit exactly zero.
+
+\subsection*{Exponents and Logarithms}
+Other common operations available in NumPy ufuncs are the exponentials.
+
+The inverse of the exponentials, the logarithms, are also available. The basic np.log
+\important{gives the natural logarithm}; if you prefer to compute the base-2 logarithm or the
+base-10 logarithm, these are available as well.
+
+There are also some specialized versions that are useful for maintaining precision
+with very small input, \verb|np.expm1|, \verb|np.log1p|. When $x$ is very small, these functions give more precise values than if the raw \verb|np.log|
+or \verb|np.exp| were to be used.
+
+\subsection*{Specialized Ufuncs}
+
+Another excellent source for more specialized ufuncs is the submodule scipy.special. If you want to compute some obscure mathematical function on your data,
+chances are it is implemented in scipy.special.
+
+In mathematics, the error function (also called the Gauss error function), often denoted by erf, is a complex function of a complex variable defined as:
+\begin{equation*}
+    erf z = \frac{2}{\sqrt{\pi}}\int_0^ze^{-t^2}dt
+\end{equation*}
+
+In mathematics, the gamma function is one commonly used extension of the factorial function to complex numbers.
+
+\begin{equation*}
+    \Gamma(z)=\int_0^{\infty}t^ze^{-t}dt
+\end{equation*}
+
+In mathematics, the beta function, also called the Euler integral of the first kind, is a special function that is closely related to the gamma function and to binomial coefficients. It is defined by the integral:
+
+\begin{equation*}
+    B(z_1, z_2)=\int_0^1t^{z_1-1}(1-t)^{z_2-1}dt
+\end{equation*}
+
+\section{Advanced Ufunc Features}
+\subsection*{Specifying Output}
+For large calculations, it is sometimes useful to be able to specify the array where the result of the calculation will be stored. For all ufuncs, this can be done using the \verb|out| argument of the function. This can even be used with array views.
+
+\begin{pyc}
+    y = np.zeros(10)
+    np.power(2, x, out=y[::2])
+    print(y)
+\end{pyc}
+
+If we had instead written \verb|y[::2] = 2 ** x|, this would have resulted in the creation
+of a temporary array to hold the results of \verb|2 ** x|, followed by a second operation
+copying those values into the y array. This doesn't make much of a difference for such
+a small computation, but for very large arrays the memory savings from careful use of
+the out argument can be significant.
+\subsection*{Aggregations}
+
+For binary ufuncs, aggregations can be computed directly from the object. For example, if we'd like to \textbf{reduce}(规约, fold)\marginpar[reduce]{reduce} an array with a particular operation, we can use the reduce
+method of any ufunc. A reduce repeatedly applies a given operation to the elements
+of an array until only a single result remains. If we'd like to store all the intermediate results of the computation, we can instead use
+\textbf{accumulate}\marginpar[accumulate]{accumulate}.
+
+Note that for these particular cases, there are dedicated NumPy functions to compute
+the results (\verb|np.sum|, \verb|np.prod|, \verb|np.cumsum|, \verb|np.cumprod|).
+
+\subsection*{Outer Products}
+Finally, any ufunc can compute the output of all pairs of two different inputs using
+the outer\marginpar[outer]{outer} method.(这里应该不能翻译为外积，虽然有些类似)
+
+The \verb|ufunc.at| and \verb|ufunc.reduceat| methods are useful as well.

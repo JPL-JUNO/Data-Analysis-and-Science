@@ -1,0 +1,76 @@
+\chapter{Feature Engineering\label{Ch40}}
+In the real world, data rarely comes in such a form. With
+this in mind, one of the more important steps in using machine learning in practice is
+feature engineering: that is, taking whatever information you have about your problem
+and turning it into numbers that you can use to build your feature matrix.
+\section{Categorical Features}
+One common type of nonnumerical data is categorical data.
+
+The Scikit-Learn's models make the fundamental assumption that numerical features reflect algebraic quantities.
+
+one proven technique is to use one-hot encoding, which effectively creates
+extra columns indicating the presence or absence of a category with a value of 1 or 0,
+respectively. When your data takes the form of a list of dictionaries, Scikit-Learn's
+\verb|DictVectorizer| will do this for you.
+
+To see the meaning of each column, you can inspect the feature names, \verb|get_feature_names_out()|.
+
+There is one clear disadvantage of this approach: if your category has many possible
+values, this can greatly increase the size of your dataset. However, because the encoded data contains mostly zeros, a sparse output can be a very efficient solution. Nearly all of the Scikit-Learn estimators accept such sparse inputs when fitting and
+evaluating models. Two additional tools that Scikit-Learn includes to support this
+type of encoding are \verb|sklearn.preprocessing.OneHotEncoder| and \verb|sklearn.feature_extraction.FeatureHasher|.
+
+\section{Text Features}
+Another common need in feature engineering is to convert text to a set of representative numerical values.
+
+\notes{One of the simplest methods of
+    encoding this type of data is by \textit{word counts}: you take each snippet of text, count the
+    occurrences of each word within it, and put the results in a table.}
+
+There are some issues with using a simple raw word count, however: it can lead to
+features that put too much weight on words that appear very frequently, and this can
+be suboptimal in some classification algorithms. One approach to fix this is known as
+\textit{term frequency–inverse document frequency} (TF–IDF), which weights the word counts
+by a measure of how often they appear in the documents.
+
+在一份给定的文件里，词频（term frequency, tf）指的是某一个给定的词语在该文件中出现的频率。这个数字是对词数（term count）的标准化，以防止它偏向长的文件。（同一个词语在长文件里可能会比段文件有更高的次数，而不管该词语重要与否）对于在某一个特定文件里的词语 $t_i$ 来说，它的重要性可表示：
+\begin{equation}
+    tf_{i,j}=\frac{n_{i,j}}{\sum_k n_{k,j}}
+\end{equation}
+
+式中假设文件 $d_j$ 中共有 $k$ 个词语， $n_{k, j}$ 是 $t_k$ 在文件 $d_j$ 中出现的次数。分子 $n_{i,j}$ 是该词在文件 $d_j$ 中出现次数，而分母则是在文件 $d_j$ 中所有字词出现的次数之和。
+
+逆向文件频率（inverse document frequency, idf）是一个词语普遍重要性的度量。某一特定词语的 idf，可以有总文件数目除以包含该词语之文件的数目，再将得到的上取以10为底的对数得到：
+\begin{equation}
+    idf_i=\log_{10}\frac{|D|}{|\{j:t_i\in d_j\}|}
+\end{equation}
+式中，$|D|$表示语料库中的文件总数，$|\{j:t_i\in d_j\}|$ 表示包含词语 $t_i$ 的文件数目，如果词语不再资料中，就导致分母为零，因此一般情况下使用$1+ |\{j:t_i\in d_j\}|$，然后
+\begin{equation}
+    tfidf_{i,j}=tf_{i,j}\times idf_i
+\end{equation}
+某一特定文件内的高词语频率，以及该词语在整个文件集合中的低文件频率，可以产生出高权重的 $tf-idf$，因此，$tf-idf$ 倾向于过滤掉常见的词语，保留重要的词语。
+
+例子：假如一篇文件的总词数是100个，而词语母牛出现了3次，那么母牛一次在该文件中的词频就 $3/100=0.03$，而计算文件频率的方法就是以文件集的文件总数除以出现母牛一词的文件数，所以，如果母牛一次在1000份文件出现过，而文件总数是10000000份的话，其你想文件频率就是$\log_{10}(10000000/1000)=4$，最后的 $tf-idf$的分数为 $0.03 * 4=.012$，更多访问 \href{https://zh.wikipedia.org/wiki/Tf-idf}{tf-idf}。
+
+\section{Image Features}
+Another common need is to suitably encode images for machine learning analysis. A comprehensive summary of feature extraction techniques for images is well beyond
+the scope of this chapter, but you can find excellent implementations of many of the
+standard approaches in the \href{https://scikit-image.org/}{Scikit-Image project}.
+
+\section{Derived Features}
+Another useful type of feature is one that is mathematically derived from some input features. We saw an example of this in \autoref{Ch39} when we constructed \textit{polynomial features} from our input data. We saw that we could convert a linear regression into a polynomial regression not by changing the model, but by transforming the input!
+
+\begin{tcolorbox}
+    This idea of improving a model not by changing the model, but by transforming the inputs, is fundamental to many of the more powerful machine learning methods.
+
+    More generally, this is one motivational path to the powerful set of techniques known
+    as \textit{kernel methods}.
+\end{tcolorbox}
+
+\section{Imputation of Missing Data}
+Another common need in feature engineering is handling of missing data. When applying a typical machine learning model to such data, we will need to first
+replace the missing values with some appropriate fill value. This is known as \textit{imputation}\marginpar[imputation]{imputation} of missing values, and strategies range from simple (e.g., replacing missing values
+with the mean of the column) to sophisticated (e.g., using matrix completion or a robust model to handle such data).
+
+\section{Feature Pipelines}
+It can quickly become tedious to do the transformations by hand, especially if you wish to string together multiple steps. Scikit-Learn provides a Pipeline object to streamline type of processing pipeline,

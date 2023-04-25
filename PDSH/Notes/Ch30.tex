@@ -1,0 +1,60 @@
+\chapter{Customizing Colorbars\label{Ch30}}
+Plot legends identify discrete labels of discrete points. For continuous labels based on
+the color of points, lines, or regions, a labeled colorbar can be a great tool. In Matplotlib, a colorbar is drawn as a separate axes that can provide a key for the meaning
+of colors in a plot.
+
+As we have seen several times already, the simplest colorbar can be created with the
+plt.colorbar\marginpar[plt.colorbar]{plt.colorbar} function.
+
+\section{Customizing Colorbars}
+The colormap can be specified using the cmap argument to the plotting function that
+is creating the visualization. The names of available colormaps are in the \verb|plt.cm| namespace.
+
+\subsection*{Choosing the Colormap}
+Broadly, you should be aware of three different categories of colormaps:
+\begin{itemize}
+    \item  \textbf{Sequential colormaps}(顺序配色方案): These are made up of one continuous sequence of colors (e.g., binary or
+          viridis).
+    \item  \textbf{Divergent colormaps}(互逆配色方法): These usually contain two distinct colors, which show positive and negative deviations from a mean (e.g., RdBu or PuOr).
+    \item  \textbf{Qualitative colormaps}(定性配色方法): These mix colors with no particular sequence (e.g., rainbow or jet).
+\end{itemize}
+
+The jet colormap, which was the default in Matplotlib prior to version 2.0, is an
+example of a qualitative colormap. Its status as the default was quite unfortunate,
+because qualitative maps are often a poor choice for representing quantitative data.
+\tips{Among the problems is the fact that qualitative maps usually do not display any uniform progression in brightness as the scale increases.}
+We can see this by converting the jet colorbar into black and white (see \autoref{The jet colormap and its uneven luminance scale})
+
+\figures{The jet colormap and its uneven luminance scale}
+
+Notice the bright stripes in the grayscale image. Even in full color, this uneven brightness means that the eye will be drawn to certain portions of the color range, which
+will potentially emphasize unimportant parts of the dataset. It’s better to use a colormap such as viridis (the default as of Matplotlib 2.0), which is specifically constructed to have an even brightness variation across the range; thus, it not only plays well
+with our color perception, but also will translate well to grayscale printing.
+
+For other situations, such as showing positive and negative deviations from some
+mean, dual-color colorbars such as RdBu (Red–Blue) are helpful. However, as you can
+see in \autoref{The RdBu colormap and its luminance}, it’s important to note that the positive/negative information will be
+lost upon translation to grayscale!
+
+\figures{The RdBu colormap and its luminance}
+更多关于绘图的可以参考，\href{https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1003833}{Ten Simple Rules for Better Figures}.
+\subsection*{Color Limits and Extensions}
+Matplotlib allows for a large range of colorbar customization. The colorbar itself is
+simply an instance of plt.Axes, so all of the axes and tick formatting tricks we’ve seen
+so far are applicable. The colorbar has some interesting flexibility: for example, we
+can narrow the color limits and indicate the out-of-bounds values with a triangular
+arrow at the top and bottom by setting the extend property.
+
+\subsection*{Discrete Colorbars}
+
+Colormaps are by default continuous, but sometimes you’d like to represent discrete
+values. The easiest way to do this is to use the \verb|plt.cm.get_cmap|\footnote{MatplotlibDeprecationWarning: The get\_cmap function was deprecated in Matplotlib 3.7 and will be removed two minor releases later. Use ``matplotlib.colormaps[name]`` or ``matplotlib.colormaps.get\_cmap(obj)`` instead.} function and pass the
+name of a suitable colormap along with the number of desired bins.
+
+\section{Example: Handwritten Digits}
+Because each digit is defined by the hue of its 64 pixels, we can consider each digit to
+be a point lying in 64-dimensional space: each dimension represents the brightness of
+one pixel. Visualizing such high-dimensional data can be difficult, but one way to
+approach this task is to use a dimensionality reduction technique such as manifold
+learning to reduce the dimensionality of the data while maintaining the relationships
+of interest. Dimensionality reduction is an example of unsupervised machine learning, and we will discuss it in more detail in \autoref{Ch37}.

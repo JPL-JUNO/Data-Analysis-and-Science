@@ -1,0 +1,45 @@
+\chapter{Understanding Data Types in Python}
+\section{Fixed-Type Arrays in Python}
+Python offers several different options for storing data in efficient, fixed-type data buffers. The built-in array module (available since Python 3.3) can be used to create dense arrays of a uniform type.
+
+While Python's array object provides efficient storage of array-based data, NumPy adds to this efficient operations on that data.
+
+\section{Creating Arrays from Python Lists}
+
+Remember that unlike Python lists, NumPy arrays can only contain data of the same type. If the types do not match, NumPy will upcast them according to its type promotion rules.
+
+\section{Creating Arrays from Scratch}
+Especially for larger arrays, it is more efficient to create arrays from scratch using routines built into NumPy.
+\section{NumPy Standard Data Types}
+NumPy arrays contain values of a single type, so it is important to have detailed knowledge of those types and their limitations. The standard NumPy data types are listed in \autoref{Standard NumPy data types}. Note that when constructing an array, they can be specified using a string or using the associated NumPy object.
+\begin{table}
+    \centering
+    \caption{Standard NumPy data types}
+    \label{Standard NumPy data types}
+    \begin{tabular}{ll}
+        \hline
+        Data type         & Description                                                                          \\
+        \hline
+        \verb|bool_|      & Boolean (True or False) stored as a byte                                             \\
+        \verb|int_|       & Default integer type (same as C long; normally either int64 or int32)                \\
+        \verb|intc|       & Identical to C int (normally int32 or int64)                                         \\
+        \verb|intp|       & Integer used for indexing (same as C \verb|ssize_t|; normally either int32 or int64) \\
+        \verb|int8|       & Byte (–128 to 127)                                                                   \\
+        \verb|int16|      & Integer (–32768 to 32767)                                                            \\
+        \verb|int32|      & Integer (–2147483648 to 2147483647)                                                  \\
+        \verb|int64|      & Integer (–9223372036854775808 to 9223372036854775807)                                \\
+        \verb|uint8|      & Unsigned integer (0 to 255)                                                          \\
+        \verb|uint16|     & Unsigned integer (0 to 65535)                                                        \\
+        \verb|uint32|     & Unsigned integer (0 to 4294967295)                                                   \\
+        \verb|uint64|     & Unsigned integer (0 to 18446744073709551615)                                         \\
+        \verb|float_|     & Shorthand for float64                                                                \\
+        \verb|float16|    & Half-precision float: sign bit, 5 bits exponent, 10 bits mantissa                    \\
+        \verb|float32|    & Single-precision float: sign bit, 8 bits exponent, 23 bits mantissa                  \\
+        \verb|float64|    & Double-precision float: sign bit, 11 bits exponent, 52 bits mantissa                 \\
+        \verb|complex_|   & Shorthand for complex128                                                             \\
+        \verb|complex64|  & Complex number, represented by two 32-bit floats                                     \\
+        \verb|complex128| & Complex number, represented by two 64-bit floats                                     \\
+        \hline
+    \end{tabular}
+\end{table}
+NumPy also supports compound data types, which will be covered in \autoref{Ch12}.

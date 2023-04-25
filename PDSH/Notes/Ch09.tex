@@ -1,0 +1,95 @@
+\chapter{Comparisons, Masks, and Boolean Logic}
+Masking comes up when you want to extract, modify, count, or
+otherwise manipulate values in an array based on some criterion.
+In NumPy, Boolean masking is often the most efficient
+way to accomplish these types of tasks.
+\section{Example: Counting Rainy Days}
+
+We saw in \autoref{Ch06} that NumPy's ufuncs can be used in place of loops to do
+fast element-wise arithmetic operations on arrays; in the same way, we can use other
+ufuncs to do element-wise comparisons over arrays
+\section{Comparison Operators as Ufuncs}
+
+NumPy implements comparison operators such as $<$ (less than) and $>$
+(greater than) as element-wise ufuncs. The result of these comparison operators is
+always an array with a Boolean data type. All six of the standard comparison operations are available.
+
+As in the case of arithmetic operators, the comparison operators are implemented as
+ufuncs in NumPy; for example, when you write \verb|x < 3|, internally NumPy uses
+\verb|np.less(x, 3)|. A summary of the comparison operators and their equivalent ufuncs
+is shown here:
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{llll}
+        \hline
+        Operator & Equivalent ufunc  & Operator & Equivalent ufunc        \\
+        \hline
+        $==$     & \verb|np.equal|   & $!=$     & \verb|np.not_equal|     \\
+        $<$      & \verb|np.less|    & $<=$     & \verb|np.less_equal|    \\
+        $>$      & \verb|np.greater| & $>=$     & \verb|np.greater_equal| \\
+        \hline
+    \end{tabular}
+\end{table}
+\section{Working with Boolean Arrays}
+\subsection*{Counting Entries}
+To count the number of True entries in a Boolean array, \verb|np.count_nonzero| is useful. Another way to get at this
+information is to use np.sum; in this case, False is interpreted as 0, and True is interpreted as 1.
+
+The benefit of np.sum is that, like with other NumPy aggregation functions, this summation can be done along rows or columns as well.
+
+If we're interested in quickly checking whether any or all the values are True, we can
+use (you guessed it) \verb|np.any| or \verb|np.all|. \verb|np.all| and \verb|np.any| can be used along particular axes as well.
+
+\subsection*{Boolean Operators}
+The following table summarizes the bitwise Boolean operators and their equivalent
+ufuncs:
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{llll}
+        \hline
+        Operator & Equivalent ufunc      & Operator & Equivalent ufunc      \\
+        \hline
+        $\&$     & \verb|np.bitwise_and| & $|$      & \verb|np.bitwise_or|  \\
+        \^{}     & \verb|np.bitwise_xor| & \~{}     & \verb|np.bitwise_not| \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\section{Boolean Arrays as Masks}
+In the preceding section we looked at aggregates computed directly on Boolean
+arrays. A more powerful pattern is to use Boolean arrays as masks, to select particular
+subsets of the data themselves.
+
+To select values from array, we can simply index on this Boolean array;
+this is known as a \textbf{masking}\marginpar[masking]{masking} operation. What is \notes{returned is a one-dimensional array} filled with all the values that meet this
+condition; in other words, all the values in positions at which the mask array is True.
+
+\section{Using the Keywords and/or Versus the Operators $\&/|$}
+One common point of confusion is the difference between the keywords and and or
+on the one hand, and the operators $\&$ and $|$ on the other. When would you use one versus the other?
+
+The difference is this: and and or operate on the object as a whole, while $\&$ and $|$
+operate on the elements within the object.
+
+When you use and or or, it is equivalent to asking Python to treat the object as a single Boolean entity. In Python, all nonzero integers will evaluate as True.
+
+When you use $\&$ and $|$ on integers, the expression operates on the bitwise representation of the element, applying the and or the or to the individual bits making up the
+number.
+
+When you have an array of Boolean values in NumPy, this can be thought of as a
+string of bits where \verb|1 = True| and \verb|0 = False|, and \& and $|$ will operate.
+
+But if you use or on these arrays it will try to evaluate the truth or falsehood of the
+entire array object, which is not a well-defined value.
+
+Similarly, when evaluating a Boolean expression on a given array, you should use $|$ or
+\& rather than or or and.
+
+Trying to evaluate the truth or falsehood of the entire array will give the same
+\verb|ValueError|.
+
+So, remember this: and and or perform a single Boolean evaluation on an entire
+object, while \& and $|$ perform multiple Boolean evaluations on the content (the individual bits or bytes) of an object. For Boolean NumPy arrays, the latter is nearly
+always the desired operation.

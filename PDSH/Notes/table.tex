@@ -1,0 +1,124 @@
+\begin{table}
+    \centering
+    \caption{Aggregation functions available in NumPy}
+    \label{Aggregation functions available in NumPy}
+    \begin{tabular}{lll}
+        \hline
+        Function name & NaN-safe version & Description                               \\
+        \hline
+        np.sum        & np.nansum        & Compute sum of elements                   \\
+        np.prod       & np.nanprod       & Compute product of elements               \\
+        np.mean       & np.nanmean       & Compute mean of elements                  \\
+        np.std        & np.nanstd        & Compute standard deviation                \\
+        np.var        & np.nanvar        & Compute variance                          \\
+        np.min        & np.nanmin        & Find minimum value                        \\
+        np.max        & np.nanmax        & Find maximum value                        \\
+        np.argmin     & np.nanargmin     & Find index of minimum value               \\
+        np.argmax     & np.nanargmax     & Find index of maximum value               \\
+        np.median     & np.nanmedian     & Compute median of elements                \\
+        np.percentile & np.nanpercentile & Compute rank-based statistics of elements \\
+        np.any        & N/A              & Evaluate whether any elements are true    \\
+        np.all        & N/A              & Evaluate whether all elements are true    \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{llll}
+        \hline
+        Operator & Equivalent ufunc  & Operator & Equivalent ufunc        \\
+        \hline
+        $==$     & \verb|np.equal|   & $!=$     & \verb|np.not_equal|     \\
+        $<$      & \verb|np.less|    & $<=$     & \verb|np.less_equal|    \\
+        $>$      & \verb|np.greater| & $>=$     & \verb|np.greater_equal| \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{llll}
+        \hline
+        Operator & Equivalent ufunc      & Operator & Equivalent ufunc      \\
+        \hline
+        $\&$     & \verb|np.bitwise_and| & $\|$     & \verb|np.bitwise_or|  \\
+        $\^$     & \verb|np.bitwise_xor| & $~$      & \verb|np.bitwise_not| \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}
+    \centering
+    \caption{NumPy data types}
+    \label{NumPy data types}
+    \begin{tabular}{lll}
+        \hline
+        Character & Description            & Example                                 \\
+        \hline
+        'b'       & Byte                   & \verb|np.dtype('b')|                    \\
+        'i'       & Signed integer         & \verb|np.dtype('i4') == np.int32|       \\
+        'u'       & Unsigned integer       & \verb|np.dtype('u1') == np.uint8|       \\
+        'f'       & Floating point         & \verb|np.dtype('f8') == np.int64|       \\
+        'c'       & Complex floating point & \verb|np.dtype('c16') == np.complex128| \\
+        'S', 'a'  & String                 & \verb|np.dtype('S5')|                   \\
+        'U'       & Unicode string         & \verb|np.dtype('U') == np.str_|         \\
+        'V'       & Raw data (void)        & \verb|np.dtype('V') == np.void|         \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}
+    \centering
+    \caption{Mapping between Python operators and Pandas methods}
+    \label{Mapping between Python operators and Pandas methods}
+    \begin{tabular}{ll}
+        \hline
+        Python operator & Pandas method(s)     \\
+        \hline
+        \verb|+|        & add                  \\
+        \verb|-|        & sub, subtract        \\
+        \verb|*|        & mul, multiply        \\
+        \verb|/|        & truediv, div, divide \\
+        \verb|//|       & floordiv             \\
+        \verb|%|        & mod                  \\
+        \verb|**|       & pow                  \\
+    \end{tabular}
+\end{table}
+
+\begin{table}
+    \centering
+    \caption{Pandas handling of NAs by type}
+    \label{Pandas handling of NAs by type}
+    \begin{tabular}{lll}
+        \hline
+        Typeclass & Conversion when storing NAs & NA sentinel value \\
+        \hline
+        floating  & No change                   & np.nan            \\
+        object    & No change                   & None or np.nan    \\
+        integer   & Cast to float64             & np.nan            \\
+        boolean   & Cast to object              & None or np.nan    \\
+        \hline
+    \end{tabular}
+\end{table}
+
+
+\begin{table}
+    \centering
+    \caption{Listing of Pandas aggregation methods}
+    \label{Listing of Pandas aggregation methods}
+    \begin{tabular}{ll}
+        \hline
+        Aggregation  & Returns                         \\
+        \hline
+        count        & Total number of items           \\
+        first, last  & First and last item             \\
+        mean, median & Mean and median                 \\
+        min, max     & Minimum and maximum             \\
+        std, var     & Standard deviation and variance \\
+        mad          & Mean absolute deviation         \\
+        prod         & Product of all items            \\
+        sum          & Sum of all items                \\
+        \hline
+    \end{tabular}
+\end{table}

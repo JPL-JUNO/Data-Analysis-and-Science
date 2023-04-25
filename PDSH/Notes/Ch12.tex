@@ -1,0 +1,63 @@
+\chapter{Structured Data: NumPy's Structured Arrays\label{Ch12}}
+\section{Exploring Structured Array Creation}
+We can use dictionary method to create structured array, which key is names and formats.
+
+For clarity, numerical types can be specified using Python types or NumPy dtypes
+instead.
+
+A compound type can also be specified as a list of tuples. If the names of the types do not matter to you, you can specify the types alone in a
+comma-separated string.
+
+The shortened string format codes may not be immediately intuitive, but they are
+built on simple principles. The first (optional) character $<$ or $>$, means “little endian”(低字节序)
+or “big endian,” respectively, and specifies the ordering convention for significant
+bits. The next character specifies the type of data: characters, bytes, ints, floating
+points, and so on (see \autoref{NumPy data types}). The last character or characters represent the size
+of the object in bytes.
+
+\begin{table}
+    \centering
+    \caption{NumPy data types}
+    \label{NumPy data types}
+    \begin{tabular}{lll}
+        \hline
+        Character & Description            & Example                                 \\
+        \hline
+        'b'       & Byte                   & \verb|np.dtype('b')|                    \\
+        'i'       & Signed integer         & \verb|np.dtype('i4') == np.int32|       \\
+        'u'       & Unsigned integer       & \verb|np.dtype('u1') == np.uint8|       \\
+        'f'       & Floating point         & \verb|np.dtype('f8') == np.int64|       \\
+        'c'       & Complex floating point & \verb|np.dtype('c16') == np.complex128| \\
+        'S', 'a'  & String                 & \verb|np.dtype('S5')|                   \\
+        'U'       & Unicode string         & \verb|np.dtype('U') == np.str_|         \\
+        'V'       & Raw data (void)        & \verb|np.dtype('V') == np.void|         \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\section{More Advanced Compound Types}
+
+It is possible to define even more advanced compound types. For example, you can
+create a type where each element contains an array or matrix of values.
+
+为什么我们宁愿用这种方法存
+储数据，也不用简单的多维数组，或者 Python 字典呢？原因是 NumPy 的 dtype 直接映射
+到 C 结构的定义，因此包含数组内容的缓存可以直接在 C 程序中使用。如果你想写一个
+Python 接口与一个遗留的 C 语言或 Fortran 库交互，从而操作结构化数据，你将会发现结
+构化数组非常有用！
+\section{Record Arrays: Structured Arrays with a Twist}
+NumPy also provides record arrays (instances of the np.recarray class), which are
+almost identical to the structured arrays just described, but with one additional feature: fields can be accessed as attributes rather than as dictionary keys.
+
+If we view our data as a record array instead, we can access this with slightly fewer
+keystrokes. The downside is that for record arrays, there is some extra overhead involved in
+accessing the fields, even when using the same syntax.
+
+Whether the more convenient notation is worth the (slight) overhead will depend on
+your own application.
+
+\section{On to Pandas}
+This chapter on structured and record arrays is purposely located at the end of this
+part of the book, because it leads so well into the next package we will cover: Pandas.
+Structured arrays can come in handy in certain situations, like when you’re using
+NumPy arrays to map onto binary data formats in C, Fortran, or another language.

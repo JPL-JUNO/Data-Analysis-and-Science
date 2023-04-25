@@ -1,0 +1,63 @@
+\chapter{In Depth: Linear Regression\label{Ch42}}
+Just as naive Bayes (discussed in \autoref{Ch41}) is a good starting point for classification
+tasks, linear regression models are a good starting point for regression tasks. Such
+models are popular because they can be fit quickly and are straightforward to interpret.
+\section{Simple Linear Regression}
+We can use the single LinearRegression estimator to fit lines, planes, or
+hyperplanes to our data. It still appears that this approach would be limited to strictly
+linear relationships between variables.
+
+\section{Basis Function Regression}
+One trick you can use to adapt linear regression to nonlinear relationships between variables is to transform the data according to basis functions. We have seen one version of this before, in the PolynomialRegression pipeline used in \autoref{Ch39} and \autoref{Ch40}. The idea is to take our multidimensional linear model:
+\begin{equation*}
+    y = a_0 + a_1x_1 + a_2x_2 + a_3x_3 +\cdots
+\end{equation*}
+and build the $x_1, x_2, x_3$, and so on from our single-dimensional input $x$. That is, we let
+$x_n = f_n(x)$ , where $f_n$ is some function that transforms our data.(这个多元回归模型中，特征都是一维输入的函数) For example, if $f_n(x) = x^n$, our model becomes a polynomial regression:
+\begin{equation*}
+    y = a_0 + a_1x + a_2x^2 + a_3x^3 +\cdots
+\end{equation*}
+Notice that this is still a linear model—\important{the linearity refers to the fact that the coefficients an never multiply or divide each other.} What we have effectively done is taken
+our one-dimensional x values and projected them into a higher dimension, so that a linear fit can fit more complicated relationships between $x$ and $y$.
+
+\subsection*{Polynomial Basis Functions}
+This polynomial projection is useful enough that it is built into Scikit-Learn, using the PolynomialFeatures transformer.
+
+\subsection*{Gaussian Basis Functions}
+Of course, other basis functions are possible. For example, one useful pattern is to fit a model that is not a sum of polynomial bases, but a sum of Gaussian bases. The result might look something like \autoref{A Gaussian basis function fit to nonlinear data}.
+
+Algebraically, Gaussian basis functions are defined as follows:
+\begin{equation}
+    \phi_k(t;\mu_k ,\sigma^2_k) = \exp \left(-\dfrac{||t-\mu_k||^2}{2\sigma^2_k}\right), k=1,\dots,K
+\end{equation}
+where$\mu_k$is a parameter determining the center of the basis function,$\sigma_k^2$
+is a parameter that determines the width and $||.||$ is the Euclidian norm. The basis functions overlap with each other to capture the information about $t$, and the width parameter play an essential role to capture the structure in the data over the region of input data. The parameters featuring in each basis function are often determined heuristically based on the structure of the observed data.
+
+\figures{A Gaussian basis function fit to nonlinear data}
+
+The shaded regions in the \autoref{A Gaussian basis function fit to nonlinear data} are the scaled basis functions, and when added together they reproduce the smooth curve through the data. These Gaussian basis functions are not built into Scikit-Learn, but we can write a custom transformer that
+will create them.
+
+\section{Regularization}
+The introduction of basis functions into our linear regression makes the model much more flexible, but it also can very quickly lead to overfitting.
+
+We know that such
+behavior is problematic, and it would be nice if we could limit such spikes explicitly
+in the model by penalizing large values of the model parameters. Such a penalty is
+known as regularization, and comes in several forms.
+
+\subsection*{Ridge Regression ($L_2$ Regularization)}
+Perhaps the most common form of regularization is known as ridge regression or $L_2$ regularization (sometimes also called Tikhonov regularization). This proceeds by penalizing the sum of squares (2-norms) of the model coefficients θn. In this case, the
+penalty on the model fit would be:
+\begin{equation}
+    P=\alpha\sum_{i=1}^{n}\theta_n^2
+\end{equation}
+where $\alpha$ is a free parameter that controls the strength of the penalty. This type of penalized model is built into Scikit-Learn with the \verb|Ridge|\marginpar[Ridge]{Ridge} estimator.
+
+\subsection*{Lasso Regression ($L_1$ Regularization)}
+Another common type of regularization is known as lasso regression or $L_1$ regularization and involves penalizing the sum of absolute values (1-norms) of regression
+coefficients:
+\begin{equation}
+    P=\alpha\sum_{i=1}^{n}|\theta_n|
+\end{equation}
+Though this is conceptually very similar to ridge regression, the results can differ surprisingly. For example, \tips{due to its construction, lasso regression tends to favor sparse models where possible: that is, it preferentially sets many model coefficients to exactly zero.}

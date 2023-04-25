@@ -1,0 +1,110 @@
+\usepackage{amsmath, amssymb}
+\usepackage{ulem}
+% \usepackage{mathptmx}
+\usepackage{siunitx}
+\usepackage{ctex}
+\usepackage{minted}
+\usepackage{tcolorbox}
+\usepackage{epigraph}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{pdfpages}
+\usepackage{graphicx}
+\setkeys{Gin}{width=0.7\textwidth}
+\usepackage{listings}
+\newtheorem{theorem}{Theorem}
+\usepackage{tikz}
+\usepackage{pifont}
+\usepackage{tabularx}
+\usepackage{framed}
+% \usepackage{algorithm}
+\usepackage[lined,boxed,ruled]{algorithm2e}
+\usepackage{titlesec}
+\usepackage{bm}
+
+\titlespacing\section{0pt}{8pt plus 4pt minus 2pt}{0pt plus 2pt minus 2pt}
+\titlespacing\subsection{0pt}{8pt plus 4pt minus 2pt}{0pt plus 2pt minus 2pt}
+\titlespacing\subsubsection{0pt}{8pt plus 4pt minus 2pt}{0pt plus 2pt minus 2pt}
+
+% 在part页添加内容
+\makeatletter
+\let\old@endpart\@endpart
+\renewcommand\@endpart[1][]{%
+    \begin{quote}#1\end{quote}%
+    \old@endpart}
+\makeatother
+
+% \setminted[python]{bgcolor=red!5, xleftmargin=20pt, linenos, breakanywhere=true,fontsize=\small,baselinestretch=1.1}
+\setminted[python]{breakanywhere=true,fontsize=\small,baselinestretch=1.1}
+%定义新的minted命令
+\newminted[pyc]{python}{}
+
+\title{\textbf{Python Data Science Handbook}\\Essential Tools for Working with Data}
+
+\author{Stephen CUI\orcidlink{0009-0008-2664-5882}}
+\date{March 8, 2023}
+
+\newcommand\tips[1]{\textcolor{green!50!black}{#1}}
+\newcommand\notes[1]{\textcolor{blue!50!black}{#1}}
+\newcommand\important[1]{\textcolor{red!90!black}{#1}}
+
+\newcommand\figures[1]{
+    \begin{figure}
+        \centering
+        \includegraphics{../Figures/#1.png}
+        \caption{#1}
+        \label{#1}
+    \end{figure}
+}
+
+\usepackage{enumitem}
+% 去掉enumerate、itemize、description中的间隙
+\setlist{noitemsep, topsep=0pt}
+
+\tcbuselibrary{minted, skins, breakable}
+\tcbset{breakable, colframe=orange!90!black,colback=orange!10, sharp corners=all}
+% \newtcblisting[auto counter, number within =chapter]{py}[1]{listing engine=minted,
+% 	minted style=colorful,
+% 	minted language=python,
+% 	minted options={breaklines,autogobble,linenos,numbersep=3mm},
+% 	colback=red!5!white,colframe=orange!50!blue,listing only, left=5mm,enhanced,
+% 	title=Examples~\thetcbcounter~#1,
+% 	breakable,
+% 	enhanced
+% 	%						 overlay={
+% 	%						 	\begin{tcbclipinterior}
+% 	%						 		\fill[red!30!white] (frame.south west)
+% 	%						 		rectangle ([xshift=5mm]frame.north west);
+% 	%							\end{tcbclipinterior}}
+% }
+\usepackage[
+    bottom=1.77cm,
+    left=2.75cm,
+    right=2.75cm,
+    marginparwidth=1.5cm,     % + <- Width of your marginpar
+    marginparsep=5mm,       % + <- Gap between text block and marginpar
+]{geometry}
+
+\usepackage{hyperref}
+% 将引用的chapter改写为Chapter
+\usepackage[english]{babel}
+\addto\extrasenglish{
+    \def\chapterautorefname{Chapter}
+}
+\addto\extrasenglish{
+    \def\sectionautorefname{Section}
+}
+\usepackage{orcidlink}
+\definecolor{SWJTU}{HTML}{025483}
+% 全局取消段前缩进
+% \setlength{\parindent}{0pt}
+% \setlength{\parskip}{5pt}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=SWJTU,
+    filecolor=SWJTU,
+    urlcolor=SWJTU,
+    citecolor=SWJTU,
+}
+
+

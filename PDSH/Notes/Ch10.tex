@@ -1,0 +1,52 @@
+\chapter{Fancy Indexing}
+In this chapter, we'll look at another style of array indexing, known as fancy or
+vectorized indexing, in which we pass arrays of indices in place of single scalars. This
+allows us to very quickly access and modify complicated subsets of an array's values.
+
+\section{Exploring Fancy Indexing}
+Fancy Indexing 在概念上非常简单，它意味着传递一个索引数组来一次性获得多个数组元素。
+
+When using arrays of indices, the shape of the result reflects the shape of the \emph{index arrays} rather than the shape of the \emph{array being indexed}.
+
+Fancy indexing also works in multiple dimensions. The pairing of indices in fancy indexing follows all the broadcasting
+rules that were mentioned in \autoref{Ch08}.
+
+这里特别需要记住的是，花哨的索引返回的值反映的是广播后的索引数组的形状，而不是
+被索引的数组的形状。
+\section{Combined Indexing}
+We can combine fancy and simple indices, combine fancy indexing with slicing, combine fancy indexing with masking.
+
+\section{Modifying Values with Fancy Indexing}
+Just as fancy indexing can be used to access parts of an array, it can also be used to
+modify parts of an array.
+
+Notice, though, that repeated indices with these operations can cause some potentially unexpected results.
+
+\begin{pyc}
+    x = np.array([6., 0., 0., 0., 0., 0., 0., 0., 0., 0.])
+    i = [2, 3, 3, 4, 4, 4]
+    x[i] += 1
+    x # array([6., 0., 1., 1., 1., 0., 0., 0., 0., 0.])
+\end{pyc}
+分析这段代码，需要将\verb|x[i] += 1|改写成\verb|x[i] = x[i] + 1|，这样先计算\verb|x[i] + 1|，然后将结果赋值给\verb|x[i]|，执行中间过程如下：
+
+\begin{pyc}
+    x = np.zeros(10)
+    x[[0, 0]] = [4, 6]
+    temp = x[i] + 1
+    print(temp) # [1. 1. 1. 1. 1. 1.]
+    x[i] = temp
+    x[i] # array([1., 1., 1., 1., 1., 1.])
+\end{pyc}
+
+这里的重复赋值会因为重复的索引而出现替换，因此仅会出现最后一个索引的位置被修改。
+
+So what if you want the other behavior where the operation is repeated? For this, you
+can use the at method of ufuncs.
+
+The at method does an in-place\marginpar[in-place]{in-place} application of the given operator at the specified indices with the specified value . Another method that is similar in
+spirit is the reduceat method of ufuncs, which you can read about in the NumPy
+documentation.
+
+
+

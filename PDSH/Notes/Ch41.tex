@@ -1,0 +1,76 @@
+\chapter{In Depth: Naive Bayes Classification\label{Ch41}}
+
+Naive Bayes models are a group of extremely fast and simple classification algorithms that are often suitable for very high-dimensional datasets. Because they are so fast and have so few tunable parameters, they end up being useful as a quick-and-dirty baseline for a classification problem.
+
+\section{Bayesian Classification}
+In Bayesian classification, we’re interested in
+finding the probability of a label L given some observed features, which we can write
+as $P(L|features)$.
+
+\begin{equation*}
+    P(L|features)=\frac{P(features|L)P(L)}{P(features)}
+\end{equation*}
+
+If we are trying to decide between two labels—let’s call them $L_1$ and $L_2$—then one way
+to make this decision is to compute the ratio of the posterior probabilities for each
+label:
+\begin{equation*}
+    \frac{P(L_1|features)}{P(L_2|features)}=\frac{P(features|L_1)P(L_1)}{P(features|L_2)P(L_2)}
+\end{equation*}
+
+All we need now is some model by which we can compute $P(features|L_i)$ for each
+label. Such a model is called a \textit{generative model} because it specifies the hypothetical
+random process that generates the data. Specifying this generative model for each
+label is the main piece of the training of such a Bayesian classifier.
+
+This is where the “naive” in “naive Bayes” comes in: if we make very naive assumptions about the generative model for each label, we can find a rough approximation of
+the generative model for each class, and then proceed with the Bayesian classification.
+Different types of naive Bayes classifiers rest on different naive assumptions about the
+data.
+
+\section{Gaussian Naive Bayes}
+Perhaps the easiest naive Bayes classifier to understand is Gaussian naive Bayes. With
+this classifier, the assumption is that \textit{data from each label is drawn from a simple Gaussian distribution.}
+
+The simplest Gaussian model is to assume that the data is described by a Gaussian
+distribution with no covariance between dimensions. This model can be fit by computing the mean and standard deviation of the points within each label, which is all
+we need to define such a distribution.
+
+\figures{Visualization of the Gaussian naive Bayes classification}
+
+\autoref{Visualization of the Gaussian naive Bayes classification}, We see a slightly curved boundary in the classifications—in general, the boundary
+produced by a Gaussian naive Bayes model will be quadratic.
+
+A nice aspect of this Bayesian formalism is that it naturally allows for probabilistic classification, which we can compute using the \verb|predict_proba| method. If you are looking for estimates of uncertainty in your classification, Bayesian
+approaches like this can be a good place to start.
+
+Of course, the final classification will only be as good as the model assumptions that
+lead to it, which is why Gaussian naive Bayes often does not produce very good
+results. Still, in many cases—especially as the number of features becomes large—this
+assumption is not detrimental enough to prevent Gaussian naive Bayes from being a
+reliable method.
+
+\section{Multinomial Naive Bayes}
+Another useful example is multinomial naive Bayes, \important{where the features are assumed to be generated from a simple multinomial distribution.} The multinomial distribution describes the probability of observing counts among a number of categories, and thus \notes{multinomial naive Bayes is most appropriate for features that represent counts or count rates.}
+\subsection*{Example: Classifying Text}
+One place where multinomial naive Bayes is often used is in text classification, where
+the features are related to word counts or frequencies within the documents to be
+classified.
+
+\section{When to Use Naive Bayes}
+Because naive Bayes classifiers make such stringent assumptions about data, they will
+generally not perform as well as more complicated models. That said, they have several advantages:
+\begin{itemize}
+    \item They are fast for both training and prediction.
+    \item They provide straightforward probabilistic prediction.
+    \item They are often easily interpretable.
+    \item They have few (if any) tunable parameters.
+\end{itemize}
+
+Naive Bayes classifiers tend to perform especially well in the following situations:
+\begin{itemize}
+    \item When the naive assumptions actually match the data (very rare in practice)
+    \item For very well-separated categories, when model complexity is less important
+    \item For very high-dimensional data, when model complexity is less important
+\end{itemize}
+The last two points seem distinct, but they actually are related: as the dimensionality of a dataset grows, it is much less likely for any two points to be found close together (\tips{after all, they must be close in every single dimension to be close overall}). This means that clusters in high dimensions tend to be more separated, on average, than clusters in low dimensions, assuming the new dimensions actually add information.

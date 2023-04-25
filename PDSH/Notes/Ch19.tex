@@ -1,0 +1,87 @@
+\chapter{Combining Datasets: merge and join\label{Ch19}}
+One important feature offered by Pandas is its high-performance, in-memory join
+and merge operations, which you may be familiar with if you have ever worked with
+databases. The main interface for this is the \verb|pd.merge|\marginpar[merge]{merge} function.
+\section{Relational Algebra}
+The behavior implemented in pd.merge is a subset of what is known as relational
+algebra, which is a formal set of rules for manipulating relational data that forms the
+conceptual foundation of operations available in most databases. The strength of the relational algebra approach is that it proposes several fundamental operations, which
+become the building blocks of more complicated operations on any dataset.
+
+\section{Categories of Joins}
+The pd.merge function implements a number of types of joins: \emph{one-to-one}, \emph{many-to-one}, and \emph{many-to-many}. All three types of joins are accessed via an identical call to
+the pd.merge interface; the type of join performed depends on the form of the input
+data.
+
+\subsection*{One-to-One Joins}
+Perhaps the simplest type of merge is the one-to-one join, which is in many ways similar to the column-wise concatenation in \autoref{Ch18}.
+
+
+The pd.merge function recognizes that each DataFrame has an employee column, and
+automatically joins using this column as a key. The result of the merge is a new Data
+Frame that combines the information from the two inputs. Notice that the order of
+entries in each column is not necessarily maintained: in this case, the order of the
+employee column differs between df1 and df2, and the pd.merge function correctly
+accounts for this. Additionally, keep in mind that the merge in general discards the
+index, except in the special case of merges by index.
+
+\subsection*{Many-to-One Joins}
+
+Many-to-one joins are joins in which one of the two key columns contains duplicate
+entries.
+
+\subsection*{Many-to-Many Joins}
+If the key column in both the left and right arrays contains duplicates, then the result is a many-to-many merge.
+
+These three types of joins can be used with other Pandas tools to implement a wide
+array of functionality.
+\section{Specification of the Merge Key}
+We've already seen the default behavior of pd.merge: it looks for one or more matching column names between the two inputs, and uses this as the key. However, often
+the column names will not match so nicely, and pd.merge provides a variety of
+options for handling this.
+\subsection*{The on Keyword}
+Most simply, you can explicitly specify the name of the key\marginpar[key]{key} column using the on keyword, which takes a column name or a list of column names. This option works only if both the left and right DataFrames have the specified
+column name.
+\subsection*{The left\_on and right\_on Keywords}
+
+At times you may wish to merge two datasets with different column names; for example, we may have a dataset in which the employee name is labeled as ``name'' rather
+than ``employee''. In this case, we can use the \verb|left_on| and \verb|right_on| keywords to
+specify the two column names.(在不同的表中，可能字段名不一样，但表示的意思是一样的)
+
+The result has a redundant column that we can drop if desired—for example, by
+using the \verb|DataFrame.drop()| method.
+\subsection*{The left\_index and right\_index Keywords}
+You can use the index as the key for merging by specifying the \verb|left_index| and/or \verb|right_index| flags in pd.merge().
+
+For convenience, Pandas includes the DataFrame.join() method, which performs an
+index-based merge without extra keyword.
+
+If you'd like to mix indices and columns, you can combine \verb|left_index| with \verb|right_on|
+or \verb|left_on| with \verb|right_index| to get the desired behavior.
+
+All of these options also work with multiple indices and/or multiple columns; the
+interface for this behavior is very intuitive. For more information on this, see the
+``\href{http://pandas.pydata.org/pandas-docs/stable/user_guide/merging.html}{Merge, Join, and Concatenate}'' section of the Pandas documentation.
+\section{Specifying Set Arithmetic for Joins}
+
+We have glossed over one important consideration in
+performing a join: the type of set arithmetic used in the join. This comes up when a
+value appears in one key column but not the other.
+
+
+We can specify this explicitly using the how keyword,
+which defaults to ``inner''.
+
+Other options for the how keyword are 'outer', 'left', and 'right'. An outer join
+returns a join over the union of the input columns and fills in missing values with NAs.
+
+The left join and right join return joins over the left entries and right entries, respectively. All of these options can be applied straightforwardly to any of the preceding join
+types.
+\section{Overlapping Column Names: The suffixes Keyword}
+当 merge 的数据框存在冲突的命名时，考虑使用前缀/后缀。
+
+Because the output would have two conflicting column, the merge function
+automatically appends the suffixes \verb|_x| and \verb|_y| to make the output columns unique. If
+these defaults are inappropriate, it is possible to specify a custom suffix using the \verb|suffixes|\marginpar[suffixes]{suffixes} keyword。
+
+\section{Example: US States Data}

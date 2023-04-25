@@ -1,0 +1,68 @@
+\chapter{Simple Scatter Plots\label{Ch27}}
+Another commonly used plot type is the simple scatter plot, a close cousin of the line
+plot. Instead of points being joined by line segments, here the points are represented
+individually with a dot, circle, or other shape.
+
+\section{Scatter Plots with plt.plot}
+
+In the previous chapter we looked at using plt.plot/ax.plot to produce line plots. It
+turns out that this same function can produce scatter plots as well. The third argument in the function call is a character that represents the type of symbol used for the plotting. Just as you can specify options such as '-' or '--' to control the line style, the marker style has its own set of short string codes.
+
+Most of the possibilities are fairly intuitive, and a number of
+the more common ones are demonstrated here (see \autoref{Demonstration of point numbers}).
+
+\figures{Demonstration of point numbers}
+
+For even more possibilities, these character codes can be used together with line and
+color codes to plot points along with a line connecting them.
+
+\section{Scatter Plots with plt.scatter}
+A second, more powerful method of creating scatter plots is the \verb|plt.scatter|\marginpar[plt.scatter]{plt.scatter} function, which can be used very similarly to the plt.plot function.
+
+\begin{tcolorbox}
+    The primary difference of plt.scatter from plt.plot is that it can be used to create
+    scatter plots where the properties of each individual point (size, face color, edge color,
+    etc.) can be individually controlled or mapped to data.
+\end{tcolorbox}
+
+\section{plot Versus scatter: A Note on Efficiency}
+\begin{tcolorbox}
+    Aside from the different features available in plt.plot and plt.scatter, why might
+    you choose to use one over the other? While it doesn’t matter as much for small
+    amounts of data, as datasets get larger than a few thousand points, plt.plot can be
+    noticeably more efficient than plt.scatter. The reason is that plt.scatter has the
+    capability to render a different size and/or color for each point, so the renderer must
+    do the extra work of constructing each point individually. With plt.plot, on the
+    other hand, the markers for each point are guaranteed to be identical, so the work of
+    determining the appearance of the points is done only once for the entire set of data.
+    For large datasets, this difference can lead to vastly different performance, and for
+    this reason, plt.plot should be preferred over plt.scatter for large datasets.
+\end{tcolorbox}
+
+\section{Visualizing Uncertainties}
+For any scientific measurement, accurate accounting of uncertainties is nearly as
+important, if not more so, as accurate reporting of the number itself.(对任何一种科学测量方法来说，准确地衡量数据误差都是无比重要的事情，甚至比数据
+本身还要重要。)
+\subsection*{Basic Errorbars}
+One standard way to visualize uncertainties is using an errorbar. A basic errorbar can
+be created with a single Matplotlib function call, as shown in \autoref{An errorbar example}.
+
+\figures{An errorbar example}
+
+Using these additional options you can easily customize the aesthetics of your errorbar plot. I often find it helpful, especially in crowded plots, to make
+the errorbars lighter than the points themselves.
+
+\subsection*{Continuous Errors}
+In some situations it is desirable to show errorbars on continuous quantities. Though
+Matplotlib does not have a built-in convenience routine for this type of application,
+it’s relatively easy to combine primitives like \verb|plt.plot| and \verb|plt.fill_between| for a
+useful result.
+
+Here we’ll perform a simple \emph{Gaussian process regression} which is a method of fitting a very flexible nonparametric function to data with a continuous measure of the uncertainty.
+
+
+\autoref{Representing continuous uncertainty with filled regions}, the resulting figure gives an intuitive view into what the Gaussian process regression
+algorithm is doing: in regions near a measured data point, the model is strongly constrained, and this is reflected in the small model uncertainties. In regions far from a
+measured data point, the model is not strongly constrained, and the model uncertainties increase.
+
+\figures{Representing continuous uncertainty with filled regions}
