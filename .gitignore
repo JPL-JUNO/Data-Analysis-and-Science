@@ -7,3 +7,4 @@ _minted-Main
 *.synctex.gz
 *.fdb_latexmk
 *.pyc
+.vscode/settings.json
