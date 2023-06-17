@@ -1,0 +1,9 @@
+\chapter{The DataFrame object\label{Ch04}}
+\section{Selecting rows from a DataFrame}
+\subsection{Extracting rows by index label}
+We can use loc to extract a sequence of index labels. The syntax mirrors Python’s list slicing syntax. We provide the starting value, a colon, and the ending value. For extractions like this one, I strongly recommended sorting the index first, as it accelerates the speed with which pandas finds the value.
+\subsection{Extracting rows by index position}
+
+\subsection{Extracting values from specific columns}
+We can use two alternative attributes, at and iat, when we know that we want to extract a single value from a DataFrame. The two attributes are speedier because pandas can optimize its searching algorithms when looking for a single value.
+\section{Resetting an index}
