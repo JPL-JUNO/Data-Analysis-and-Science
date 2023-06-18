@@ -1,0 +1,19 @@
+\chapter{MultiIndex DataFrames\label{Ch07}}
+\section{The MultiIndex object}
+To summarize, a MultiIndex is a storage container in which each label holds multiple values. A level consists of the values at the same position across the labels.
+
+\section{MultiIndex DataFrames}
+
+\section{Sorting a MultiIndex}
+Pandas can find a value in an ordered collection much quicker than in a jumbled one. A good analogous example is searching for a word in a dictionary. It's easier to locate a word when words are in alphabetical order rather than a random sequence. Thus, \textbf{it's optimal to sort an index before selecting any rows and columns from a DataFrame}.
+
+When we invoke the method on a MultiIndex DataFrame, pandas sorts all levels in ascending order and proceeds from the outside in.
+\section{Selecting with a MultiIndex}
+\subsection{Extracting one or more columns}
+If we pass a single value in square brackets, pandas will look for it in the outermost level of the columns' MultiIndex.
+
+To specify values across multiple levels in the column's MultiIndex, we can pass them inside a tuple.
+
+To extract multiple DataFrame columns, we need to pass the square brackets a list of tuples. Each tuple should specify the level values for one column. The order of tuples within the list sets the order of columns in the resulting DataFrame.
+\section{}
+\section{}
