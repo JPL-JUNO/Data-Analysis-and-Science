@@ -1,0 +1,33 @@
+\chapter{Filtering a DataFrame\label{Ch05}}
+\section{Optimizing a data set for memory use}
+\subsection{Converting data types with the astype method}
+The astype method converts a Series’ values to a different data type. It accepts a single argument: the new data type. We can pass either the data type or a string with its name.
+
+Updating a DataFrame column works similarly to setting a key-value pair in a dictionary. If a column with the specified name exists, pandas overwrites it with the new Series. If the column with the name does not exist, pandas creates a new Series and appends it to the right of the DataFrame. The library matches rows in the Series and DataFrame by shared index labels.
+\section{Filtering by a single condition}
+As long as you provide a Boolean Series, pandas will be able to filter the DataFrame.
+\section{Filtering by multiple conditions}
+We can filter a DataFrame with multiple conditions by creating two independent Boolean Series and then declaring the logical criterion that pandas should apply between them.
+\subsection{The AND condition}
+\subsection{The OR condition}
+\subsection{Inversion with $\sim$}
+\subsection{Methods for Booleans}
+
+\section{Filtering by condition}
+\subsection{The isin method}
+The isin method, which accepts an iterable of elements (list, tuple, Series, and so on) and returns a Boolean Series. True denotes that pandas found the row’s value among the iterable’s values, and False denotes that it did not.
+
+An optimal situation for using the isin method is when we do not know the comparison collection in advance, such as when it is generated dynamically.
+\subsection{The between method}
+Note that the first argument, the lower bound, is inclusive, and the second argument, the upper bound, is exclusive.
+\subsection{The isnull and notnull methods}
+The isnull and notnull methods are the best way to quickly filter for present and missing values in one or more rows.
+\subsection{Dealing with null values}
+We can use the subset parameter to target rows with a missing value in a specific column.
+\section{Dealing with duplicates}
+\subsection{The duplicated method}
+The duplicated method’s keep parameter informs pandas which duplicate occurrence to keep. Its default argument, "first", keeps the first occurrence of each duplicate value. We can also ask pandas to mark the last occurrence of a value in a column as the nonduplicate. Pass a string of "last" to the keep parameter.
+\subsection{The drop\_duplicates method}
+We can pass the method a subset parameter with a list of columns that pandas should use to determine a row’s uniqueness.
+
+One additional option is available for the keep parameter. We can pass an argument of False to exclude all rows with duplicate values. Pandas will reject a row if there are any other rows with the same value.
