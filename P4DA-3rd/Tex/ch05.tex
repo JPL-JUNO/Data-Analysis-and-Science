@@ -1,7 +1,7 @@
-\chapter{\label{Ch05}}
-\section{}
-\subsection{}
-The internal data alignment introduces missing values in the label locations that don’t overlap. Missing values will then propagate in further arithmetic computations.
+\chapter{Getting Started with pandas\label{Ch05}}
+\section{Essential Functionality}
+\subsection*{Arithmetic and Data Alignment}
+The internal data alignment introduces missing values in the label locations that don't overlap. Missing values will then propagate in further arithmetic computations.
 \subsubsection*{Arithmetic methods with fill values}
 Using the add method on df1, I pass df2 and an argument to \verb|fill_value|, which substitutes the passed value for any missing values in the operation.
 
@@ -26,7 +26,29 @@ Using the add method on df1, I pass df2 and an argument to \verb|fill_value|, wh
 By default, arithmetic between DataFrame and Series matches the index of the Series on the columns of the DataFrame, broadcasting down the rows
 
 If you want to instead broadcast over the columns, matching on the rows, you have to use one of the arithmetic methods and specify to match over the index.
-\subsection{Function Application and Mapping}
-frequent operation is applying a function on one-dimensional arrays to each column or row. DataFrame’s apply method does exactly this.
+\subsubsection*{Function Application and Mapping}
+frequent operation is applying a function on one-dimensional arrays to each column or row. DataFrame's apply method does exactly this.
 
 Element-wise Python functions can be used, too. You can do this with applymap. The reason for the name applymap is that Series has a map method for applying an element-wise function.
+\subsection{Sorting and Ranking}
+Ranking assigns ranks from one through the number of valid data points in an array, starting from the lowest value. By default, rank breaks ties by assigning each group the mean rank.
+
+
+\begin{table}
+    \centering
+    \caption{Tie-breaking methods with rank}
+    \label{tbl5-6}
+    \begin{tabularx}{\textwidth}{lX}
+        \hline
+        Method      & Description                                                                                                            \\
+        \hline
+        ``average'' & Default: assign the average rank to each entry in the equal group                                                      \\
+        ``min''     & Use the minimum rank for the whole group                                                                               \\
+        ``max''     & Use the maximum rank for the whole group                                                                               \\
+        ``first''   & Assign ranks in the order the values appear in the data                                                                \\
+        ``dense''   & Like method=``min'', but ranks always increase by 1 between groups rather than the number of equal elements in a group \\
+        \hline
+    \end{tabularx}
+\end{table}
+See \autoref{tbl5-6} for a list of tie-breaking methods available.
+\subsection{Axis Indexes with Duplicate Labels}
