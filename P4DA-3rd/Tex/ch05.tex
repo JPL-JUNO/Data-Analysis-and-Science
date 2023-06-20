@@ -2,3 +2,31 @@
 \section{}
 \subsection{}
 The internal data alignment introduces missing values in the label locations that don’t overlap. Missing values will then propagate in further arithmetic computations.
+\subsubsection*{Arithmetic methods with fill values}
+Using the add method on df1, I pass df2 and an argument to \verb|fill_value|, which substitutes the passed value for any missing values in the operation.
+
+\begin{table}
+    \centering
+    \caption{Flexible arithmetic methods}
+    \begin{tabularx}{.6\textwidth}{ll}
+        \hline
+        Method              & Description                     \\
+        \hline
+        add, radd           & Methods for addition (+)        \\
+        sub, rsub           & Methods for subtraction (-)     \\
+        div, rdiv           & Methods for division (/)        \\
+        floordiv, rfloordiv & Methods for floor division (//) \\
+        mul, rmul           & Methods for multiplication (*)  \\
+        pow, rpow           & Methods for exponentiation (**) \\
+        \hline
+    \end{tabularx}
+\end{table}
+
+\subsection*{Operations between DataFrame and Series}
+By default, arithmetic between DataFrame and Series matches the index of the Series on the columns of the DataFrame, broadcasting down the rows
+
+If you want to instead broadcast over the columns, matching on the rows, you have to use one of the arithmetic methods and specify to match over the index.
+\subsection{Function Application and Mapping}
+frequent operation is applying a function on one-dimensional arrays to each column or row. DataFrame’s apply method does exactly this.
+
+Element-wise Python functions can be used, too. You can do this with applymap. The reason for the name applymap is that Series has a map method for applying an element-wise function.
