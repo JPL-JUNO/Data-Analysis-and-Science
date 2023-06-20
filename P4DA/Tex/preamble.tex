@@ -1,0 +1,106 @@
+\usepackage{amsmath}
+% \usepackage{mathptmx}
+\usepackage{ctex}
+\usepackage{minted}
+\usepackage{tcolorbox}
+\usepackage{epigraph}
+\usepackage{caption}
+\usepackage{graphicx}
+\setkeys{Gin}{width=0.75\textwidth}
+\usepackage{listings}
+\newtheorem{theorem}{Theorem}
+\usepackage{tabularx}
+\usepackage{enumitem}
+\setlist[enumerate]{itemsep=0mm, noitemsep, topsep=0pt}
+\setlist[itemize]{itemsep=0mm, noitemsep, topsep=0pt}
+
+
+\setminted[python]{bgcolor=orange!5, linenos, breakanywhere=true}
+%定义新的minted命令
+\newminted[pyc]{python}{}
+
+
+\title{\textbf{Python for Data Analysis, 3rd edition} \\
+	\large Data Wrangling with pandas, NumPy, and Jupyter
+}
+
+\author{Stephen CUI\thanks{cuixuanStephen@gmail.com}}
+\date{January 4, 2022}
+\newcommand\explain[2]{
+	\begin{tcolorbox}[breakable,colback=orange!5,colframe=orange!95!black,title=\textbf{#1}]
+		#2
+	\end{tcolorbox}
+}
+
+\newcommand\tips[1]{
+	\begin{tcolorbox}[breakable, colback=green!7, colframe=green!70!black,title=Suggestions]
+		#1
+	\end{tcolorbox}
+}
+
+\newcommand\notes[1]{
+	\begin{tcolorbox}[breakable, colback=blue!7, colframe=SWJTU,title=Notes]
+		#1
+	\end{tcolorbox}
+}
+
+\newcommand\warning[1]{
+	\begin{tcolorbox}[breakable, colback=red!7, colframe=red!70!black,title=Warnings]
+		#1
+	\end{tcolorbox}
+}
+% \newcommand\tips[1]{\textcolor{green!70!black}{\textbf{Tips: } #1}}
+% \newcommand\notes[1]{\textcolor{blue!70!black}{\textbf{Notes: } #1}}
+\newcommand\important[1]{\textcolor{SWJTU}{\textbf{#1}}}
+\newcommand\figures[1]{
+	\begin{figure}
+		\centering
+		\includegraphics{img/codes/#1.png}
+		\caption{#1}
+		\label{#1}
+	\end{figure}
+}
+
+\definecolor{SWJTU}{HTML}{025483}
+
+
+\tcbuselibrary{minted, skins, breakable}
+\newtcblisting[auto counter, number within =section]{py}[1]{listing engine=minted,
+	minted style=colorful,
+	minted language=python,
+	minted options={breaklines,autogobble,linenos,numbersep=3mm},
+	colback=orange!5!white,colframe=orange!70!black,listing only, left=5mm,enhanced,
+	title=Examples~\thetcbcounter~#1,
+	breakable,
+	enhanced
+	%						 overlay={
+	%						 	\begin{tcbclipinterior}
+	%						 		\fill[red!30!white] (frame.south west)
+	%						 		rectangle ([xshift=5mm]frame.north west);
+	%							\end{tcbclipinterior}}
+}
+
+\usepackage{geometry}
+\geometry{left=2.45cm,right=2.45cm, top=2.77cm, bottom=2.77cm}
+
+\usepackage{hyperref}
+% 将引用的chapter改写为Chapter
+\usepackage[english]{babel}
+\addto\extrasenglish{
+	\def\chapterautorefname{Chapter}
+}
+\addto\extrasenglish{
+	\def\sectionautorefname{Section}
+}
+\addto\extrasenglish{
+	\def\subsectionautorefname{Subsection}
+}
+\hypersetup{
+	colorlinks=true,
+	linkcolor=SWJTU,
+	filecolor=SWJTU,
+	urlcolor=SWJTU,
+	citecolor=green,
+}
+
+
