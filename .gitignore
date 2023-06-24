@@ -8,3 +8,6 @@ _minted-Main
 *.fdb_latexmk
 *.pyc
 .vscode/settings.json
+.Rproj.user
+*.Rproj
+*.Rhistory

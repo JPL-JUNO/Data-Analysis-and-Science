@@ -15,5 +15,14 @@ If we pass a single value in square brackets, pandas will look for it in the out
 To specify values across multiple levels in the column's MultiIndex, we can pass them inside a tuple.
 
 To extract multiple DataFrame columns, we need to pass the square brackets a list of tuples. Each tuple should specify the level values for one column. The order of tuples within the list sets the order of columns in the resulting DataFrame.
-\section{}
-\section{}
+\section{Cross-sections}
+The xs method allows us to extract rows by providing a value for one MultiIndex level. We pass the method a key parameter with the value to look for. We pass the level parameter either the numeric position or the name of the index level in which to look for the value.
+
+We can apply the same extraction techniques to columns by passing the axis parameter an argument of "columns".
+
+We can also provide the xs method with keys across nonconsecutive MultiIndex levels. We pass them in a tuple.
+\section{Manipulating the Index}
+\subsection{Resetting the index}
+The reorder_levels method arranges the MultiIndex levels in a specified order. We pass its order parameter a list of levels in a desired order. We can also pass the order parameter a list of integers.
+
+\subsection{Setting the index}
