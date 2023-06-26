@@ -11,3 +11,4 @@ _minted-Main
 .Rproj.user
 *.Rproj
 *.Rhistory
+.RData
