@@ -10,4 +10,28 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
+print(pi)
+print(sqrt(2))
 ```
+
+The beauty of print is that it knows how to format any R value for printing, including structured values such as matrices and lists:
+```{r}
+print(matrix(c(1, 2, 3, 4), 2, 2))
+print(list('a', 'b', 'c'))
+```
+The print function has a significant limitation, however: it prints only one object at a time. Trying to print multiple items gives this mind-numbing error message
+```{r}
+print("The zero occurs at", 2 * pi, "radians.")
+```
+
+The cat function is an alternative to print that lets you concatenate multiple items into a continuous output:
+```{r}
+cat("The zero occurs at", 2 * pi, "radians.", "\n")
+fib <- c(0, 1, 1, 2, 3, 5, 8, 13, 21, 34)
+cat("The first few Fibonacci numbers are:", fib, "...\n")
+```
+A serious limitation, however, is that it cannot print compound data structures such as matrices and lists.
+```{r}
+cat(list('a', 'b', 'c'))
+```
+

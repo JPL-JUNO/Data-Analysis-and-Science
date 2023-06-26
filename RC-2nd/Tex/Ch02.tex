@@ -1,0 +1,11 @@
+\chapter{Some Basics\label{Ch02}}
+\section{Printing Something to the Screen}
+The beauty of print is that it knows how to format any R value for printing, including structured values such as matrices and lists.
+
+The print function has a significant limitation, however: it prints only one object at a time. Trying to print multiple items gives error message.
+
+The cat function is an alternative to print that lets you concatenate multiple items into a continuous output.
+
+Notice that cat puts a space between each item by default. You must provide a newline character ($\backslash$n) to terminate the line.
+
+A serious limitation, however, is that it cannot print compound data structures such as matrices and lists.
