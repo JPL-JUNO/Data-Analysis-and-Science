@@ -1,3 +1,9 @@
+################################################################
+# Description: 数字、运算、赋值和向量
+# Author(s): Stephen CUI
+# LastEditor(s): Stephen CUI
+# CreatedTime: 2023-06-29 22:21:38
+################################################################
 options(prompt = "R> ")
 2 + 3
 14 / 6
@@ -99,3 +105,22 @@ d <- c(
   seq(102, length(s), length.out = 9)
 )
 print(length(d))
+
+## 子集和元素的提取
+my_vec <- c(5, -2, 3, 4, 4, 6, 8, 10, 40221, -8)
+print(length(x=my_vec))
+print(my_vec[1])
+foo <- my_vec[2]
+print(foo)
+
+print(my_vec[length(my_vec)])
+print(my_vec[c(1, 2, 3)])
+foo <- 1:4
+print(my_vec[foo])
+
+print(my_vec[length(foo):2])
+
+indexes <- c(4, rep(x=2, times=3), 1, 1, 2, 3:1)
+print(my_vec[indexes])
+
+print(foo[-c(1, 3)])
