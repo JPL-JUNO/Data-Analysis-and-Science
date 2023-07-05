@@ -1,0 +1,12 @@
+\chapter{\label{Ch09}}
+\section{Summary}
+\begin{itemize}
+    \item A GroupBy object is a container of DataFrames.
+    \item Pandas buckets rows into GroupBy DataFrames by using values across one or more columns.
+    \item The \verb|first| and \verb|last| methods return the first and last rows from each GroupBy group. The row order in the original DataFrame determines the row order in each group.
+    \item The head and tail methods extract multiple rows from each group in the GroupBy object based on the row’s positions in the original DataFrame.
+    \item The \verb|nth| method extracts a row from each GroupBy group by its index position.
+    \item Pandas can perform aggregate calculations such as sum, average, max, and min for each group in a GroupBy object.
+    \item The agg method applies different aggregate operations to different columns. We pass it a dictionary with columns as keys and aggregation as values.
+    \item The apply method invokes a function on each DataFrame in a GroupBy object.
+\end{itemize}
