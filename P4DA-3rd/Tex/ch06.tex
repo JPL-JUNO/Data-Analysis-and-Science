@@ -1,1 +1,11 @@
 \chapter{Data Loading, Storage, and File Formats\label{Data Loading, Storage, and File Formats}}
+
+\section{Reading and Writing Data in Text Format}
+I'll give an overview of the mechanics of these functions, which are meant to convert text data into a DataFrame. The optional arguments for these functions may fall into a few categories:
+\begin{description}
+    \item[Indexing] Can treat one or more columns as the returned DataFrame, and whether to get column names from the file, arguments you provide, or not at all.
+    \item[Type inference and data conversion] Includes the user-defined value conversions and custom list of missing value markers.
+    \item[Date and time parsing] Includes a combining capability, including combining date and time information spread over multiple columns into a single column in the result.
+    \item[Iterating] Support for iterating over chunks of very large files.
+    \item[Unclean data issues] Includes skipping rows or a footer, comments, or other minor things like numeric data with thousands separated by commas.
+\end{description}
