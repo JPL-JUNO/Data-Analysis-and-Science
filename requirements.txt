@@ -5,3 +5,5 @@ matplotlib
 scipy
 plotly
 cufflinks
+tables
+openpyxl
