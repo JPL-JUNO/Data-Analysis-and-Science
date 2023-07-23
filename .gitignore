@@ -14,3 +14,8 @@ _minted-Main
 .RData
 P4DA-3rd/Codes/datasets/fec/P00000001-ALL.csv
 P4F/data.pkl
+*.npy
+*.db
+*.h5s
+P4F/data.csv
+P4F/numbers.csv
