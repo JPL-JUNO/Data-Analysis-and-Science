@@ -1,9 +1,8 @@
 \usepackage{amsmath, amssymb}
 \usepackage{ulem}
-\usepackage{mathptmx}
+% \usepackage{mathptmx}
 \usepackage{siunitx}
 \usepackage{ctex}
-\usepackage{minted}
 \usepackage{tcolorbox}
 \usepackage{epigraph}
 \usepackage{caption}
@@ -16,15 +15,10 @@
 \usepackage{tikz}
 \usepackage{pifont}
 \usepackage{tabularx}
-\usepackage{framed}
 % \usepackage{algorithm}
 \usepackage[lined,boxed,ruled]{algorithm2e}
-\usepackage{titlesec}
 \usepackage{bm}
 
-\titlespacing\section{0pt}{8pt plus 4pt minus 2pt}{0pt plus 2pt minus 2pt}
-\titlespacing\subsection{0pt}{8pt plus 4pt minus 2pt}{0pt plus 2pt minus 2pt}
-\titlespacing\subsubsection{0pt}{8pt plus 4pt minus 2pt}{0pt plus 2pt minus 2pt}
 
 % 在part页添加内容
 \makeatletter
@@ -34,22 +28,16 @@
     \old@endpart}
 \makeatother
 
-% \setminted[python]{bgcolor=red!5, xleftmargin=20pt, linenos, breakanywhere=true,fontsize=\small,baselinestretch=1.1}
-\setminted[python]{breakanywhere=true,fontsize=\small,baselinestretch=1.1}
-%定义新的minted命令
-\newminted[pyc]{python}{}
-
-
 
 \newcommand\tips[1]{\textcolor{green!50!black}{#1}}
 \newcommand\notes[1]{\textcolor{blue!50!black}{#1}}
 \newcommand\important[1]{\textcolor{red!90!black}{#1}}
 
-\newcommand\figures[1]{
+\newcommand\figures[2]{
     \begin{figure}
         \centering
         \includegraphics{../img/#1.png}
-        \caption{#1}
+        \caption{#2}
         \label{#1}
     \end{figure}
 }
@@ -58,8 +46,8 @@
 % 去掉enumerate、itemize、description中的间隙
 \setlist{noitemsep, topsep=0pt}
 
-\tcbuselibrary{minted, skins, breakable}
-\tcbset{breakable, colframe=orange!90!black,colback=orange!10, sharp corners=all}
+\tcbuselibrary{breakable}
+\tcbset{breakable}
 % \newtcblisting[auto counter, number within =chapter]{py}[1]{listing engine=minted,
 % 	minted style=colorful,
 % 	minted language=python,
