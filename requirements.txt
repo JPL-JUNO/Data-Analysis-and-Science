@@ -8,3 +8,7 @@ cufflinks
 tables
 openpyxl
 tstables
+requests
+beautifulsoup4
+html5lib
+python-dateutil
