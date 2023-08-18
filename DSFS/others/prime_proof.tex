@@ -1,0 +1,22 @@
+\documentclass{minimal}
+\usepackage{amsmath, amsthm}
+\newtheorem{theorem}{定理}
+\renewcommand{\proofname}{\indent\textbf{证明}}
+\usepackage{ctex}
+\begin{document}
+\begin{theorem}[素数判定]
+    每个整数$n\geq 2$或是素数或是一些素数的乘积。
+\end{theorem}
+
+\begin{proof}
+    假设结论不成立，则存在“反例”，即一定存在整数 $n\geq 2$ 既不是素数也不是一些素数的乘积. 根据最小反例，可令 $m$ 是这些整数中最小的一个，因为 $m$ 不是素数，则 $m$ 是合数，因此存在因子分解 $m=ab$， $2 \leq a < m$，$2 \leq b < m$（因为 a 是整数，所以由 $1<a$ 可知 $2\leq a$.
+
+    因为 m 是最小反例，所有 a 和 b 都使定理成立，即
+    $$a = pp^{\prime}p^{\prime\prime}\cdots,~b = qq^{\prime}q^{\prime\prime}\cdots$$
+    其中因子 $p, p^{\prime}, p^{\prime\prime}$ 和 $q, q^{\prime}, q^{\prime\prime}$ 都是素数，因此
+
+    $$m = ab = pp^{\prime}p^{\prime\prime}\cdots qq^{\prime}q^{\prime\prime}\cdots$$
+    是一些（至少两个）素数的乘积，矛盾.
+\end{proof}
+Stephen CUI 写于 2023 年 08 月 18 日
+\end{document}

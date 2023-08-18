@@ -13,6 +13,7 @@ def primes_to_n(n: int) -> list[int]:
 
     with tqdm.trange(3, n) as t:
         for i in t:
+            # 如果没有比 i 更小的质数能够被 i 整除，那么 i 就是质数
             i_is_prime = not any(i % p == 0 for p in primes)
             if i_is_prime:
                 primes.append(i)
