@@ -1,0 +1,35 @@
+\chapter{数据聚合与分组运算\label{ch10}}
+\section{Data Aggregation}
+\begin{table}
+    \centering
+    \caption{Optimized groupby methods}
+    \label{tbl10.1}
+    \begin{tabular}{ll}
+        \hline
+        Function name  & Description                                                                  \\
+        \hline
+        any, all       & Return True if any (one or more values) or all non-NA values are “truthy”    \\
+        count          & Number of non-NA values                                                      \\
+        cummin, cummax & Cumulative minimum and maximum of non-NA values                              \\
+        cumsum         & Cumulative sum of non-NA values                                              \\
+        cumprod        & Cumulative product of non-NA values                                          \\
+        first, last    & First and last non-NA values                                                 \\
+        mean           & Mean of non-NA values                                                        \\
+        median         & Arithmetic median of non-NA values                                           \\
+        min, max       & Minimum and maximum of non-NA values                                         \\
+        nth            & Retrieve value that would appear at position n with the data in sorted order \\
+        ohlc           & Compute four “open-high-low-close” statistics for time series-like data      \\
+        prod           & Product of non-NA values                                                     \\
+        quantile       & Compute sample quantile                                                      \\
+        rank           & Ordinal ranks of non-NA values, like calling Series.rank                     \\
+        size           & Compute group sizes, returning result as a Series                            \\
+        sum            & Sum of non-NA values                                                         \\
+        std, var       & Sample standard deviation and variance                                       \\
+        \hline
+    \end{tabular}
+\end{table}
+\section{apply：一般性的“拆分-应用-合并”}
+如果传给 apply 的函数能够接受其他参数或关键字，则可以将这些内容放在函数名后面一并传入。传入的那个函数能做什么全由你说了算，它只需返回一个pandas对象或标量值即可。
+\subsection{禁止分组键}
+\subsection{分位数和封箱分析}
+由 pd.cut（equal-length） 返回的 pd.Categorical 对象可直接传递到 groupby。
