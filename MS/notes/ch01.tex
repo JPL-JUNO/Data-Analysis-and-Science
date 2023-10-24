@@ -1,0 +1,9 @@
+\chapter{\label{ch01}}
+\section{添加 UI 控件}
+\begin{itemize}
+    \item fluidPage() 是一个布局函数，用于设置页面的基本视觉结构。
+    \item selectInput()是一个输入控件，允许用户通过提供值与应用程序交互。
+    \item verbatimTextOutput() 和 tableOutput() 是输出控件，告诉 Shiny将渲染输出放在哪里。verbatimTextOutput()显 示代码并 tableOutput()显 示表格。
+\end{itemize}
+\section{}
+您可以通过包装一段代码并将 \verb|reactive({...})| 其分配给变量来创建反应式表达式，并且可以通过像函数一样调用它来使用反应式表达式。但是，虽然看起来您正在调用函数，但响应式表达式有一个重要的区别：它仅在第一次调用时运行，然后缓存其结果，直到需要更新为止。
