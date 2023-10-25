@@ -1,0 +1,21 @@
+\chapter{基础 UI\label{ch02}}
+\section{输出}
+请注意，有两个渲染函数的行为略有不同：
+\begin{itemize}
+    \item renderText() 将结果组合成一个字符串，并且通常与 textOutput()
+    \item renderPrint() 打印结果，就像您在 R 控制台中一样，并且通常与 verbatimTextOutput()
+\end{itemize}
+\subsection{表格}
+有两种用于在表中显示数据框的选项：
+
+\begin{itemize}
+    \item tableOutput() 与 renderTable() 渲染一个静态数据表，一次性显示所有数据。
+
+    \item dataTableOutput() 与 renderDataTable() 呈现一个动态表，显示固定数量的行以及用于更改哪些行可见的控件。
+\end{itemize}
+
+tableOutput() 对于小型、固定的 summary（例如模型系数）最有用；如果您想向用户公开完整的数据框，则 dataTableOutput() 最合适。
+\subsection{绘图}
+您可以使用 plotOutput() 和 renderPlot() 显示任何类型的 R 图形（base、ggplot2 或其他）。
+\subsection{下载}
+您可以让用户使用 downloadButton() 或 downloadLink() 来下载文件。
