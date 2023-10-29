@@ -1,0 +1,93 @@
+\chapter{数据转换\label{ch03}}
+\section{引言}
+tibble 是 tidyverse 使用的一种特殊类型的数据框，以避免一些常见的问题。tibbles 和数据框之间最重要的区别是 tibbles 的打印方式。它们是为大型数据集而设计的，因此它们仅显示前几行和适合一个屏幕的列。有几个选项可以查看所有内容。如果你使用 RStudio，最方便的可能是 \verb|View(flights)|，它将打开交互式可滚动和可过滤视图。否则，你可以使用 \verb|print(flights, width = Inf)| 显示所有列，或使用 \verb|glimpse()|。
+\subsection{dplyr 基础知识}
+学习主要的 dplyr 动词（函数），这将使你能够解决绝大多数数据操作挑战。但在我们讨论它们的个体差异之前，有必要先说明一下它们的共同点：
+\begin{itemize}
+    \item 第一个参数始终是数据框。
+    \item 后续参数通常使用变量名称（不带引号）描述要操作的列。
+    \item 输出始终是新的数据框。
+\end{itemize}
+
+dplyr 的动词根据其操作内容分为四组：rows、columns、groups 以及 table。
+\section{行}
+对数据集的行进行操作的最重要的动词是 filter()，它改变存在的行而不改变它们的顺序，以及 arrange() ，它改变存在的行的顺序而不改变存在的行。这两个函数都只影响行，列保持不变。我们还将讨论 distinct()，用于查找具有唯一值。但与 arrange() 和 filter() 不同的是它还可以选择修改列。
+\subsection{filter()}
+filter() 允许你根据列的值保留行\footnote{稍后，你将了解系列 slice\_*()，它允许你根据位置选择行。}。第一个参数是数据框，第二个和后续参数是保留该行必须满足的条件。
+
+当使用 $|$ 和 == 时有一个有用的快捷方式：\verb|%in%|。它保留变量等于右侧值之一的行。
+
+当你运行 filter() 时，会执行过滤操作，创建一个新的数据框，然后打印它。它不会修改现有数据集，因为 dplyr 函数永远不会修改其输入。要保存结果，你需要使用赋值运算符。
+\subsection{arrange()}
+arrange() 根据列的值更改行的顺序。它需要一个数据框和一组列名（或更复杂的表达式）来排序。如果你提供多个列名称，则每个附加列将用于打破前一列值中的联系。
+
+在 arrange() 内部可以对某列使用 desc() 然后来根据该列按降序（从大到小）顺序对数据框重新排序。
+\subsection{distinct()}
+distinct() 查找数据集中的所有唯一行，因此从技术意义上来说，它主要对行进行操作。然而，大多数时候，你需要某些变量的不同组合，因此你还可以选择提供列名称。
+
+如果你想在过滤唯一行时保留其他列，则可以使用该 \verb|.keep_all = TRUE| 选项。distinct() 将找到数据集中第一次出现的唯一行并丢弃其余行。
+
+如果你想查找出现的次数，最好替换 distinct() 为 count()，并且使用 \verb|sort = TRUE| 参数可以按出现次数的降序排列它们。
+
+\section{列}
+有四个重要的动词会影响列而不更改行：mutate() 创建从现有列派生的新列、select() 更改存在的列、rename() 更改列的名称以及 relocate() 更改列的位置。
+
+\subsection{mutate()}
+mutate() 的工作是添加根据现有列计算的新列。默认情况下，mutate() 在数据集的右侧添加新列，这使得很难看到此处发生的情况。我们可以使用 \verb|.before| 参数将变量添加到左侧。
+
+该 . 符号表明 .before 是函数的参数，而不是我们正在创建的第三个新变量的名称。你还可以 .after 在变量后面添加，并且在两者中 .before 都 .after 可以使用变量名称而不是位置。
+
+或者，你可以使用 .keep 参数控制哪些变量与参数保留。一个特别有用的选项是 "used" 来指定我们只保留步骤中涉及或创建的列 mutate()。
+
+\subsection{select()}
+获取包含数百甚至数千个变量的数据集并不罕见。在这种情况下，第一个挑战通常只是关注你感兴趣的变量。select() 允许你使用基于变量名称的操作快速放大有用的子集。
+
+通过 =， 你可以 select() 使用来重命名变量。新名称出现在 = 的左侧，旧变量出现在右侧。
+
+\subsection{rename()}
+如果你想保留所有现有变量并且只想重命名一些变量，你可以使用 rename() 替换 select()。
+
+如果你有一堆命名不一致的列，并且手动修复它们会很痛苦，请检查 \href{https://sfirke.github.io/janitor/reference/clean_names.html}{janitor::clean\_names()} 它是否提供了一些有用的自动清理。
+\subsection{relocate()}
+relocate() 用于移动变量。你可能希望将相关变量收集在一起或将重要变量移到前面。默认情况下将变量移到前面。 你还可以使用 .before 和 .after 参数指定放置它们的位置，与 mutate() 类似。
+\section{管道}
+\section{组}
+当你添加与群组合作的功能时，dplyr 会变得更加强大。在本节中，我们将重点关注最重要的函数：\verb|group_by()|、\verb|summarize()| 和 slice 函数系列。
+\subsection{group\_by()}
+\verb|group_by()| 用于将数据集分为对分析有意义的组。group\_by() 不会更改数据，但是，如果你仔细查看输出，你会注意到输出表明它是按分组变量“分组”的。这意味着后续操作现在将按组进行。group\_by() 将此分组功能（称为类）添加到数据框中，这会更改应用于数据的后续动词的行为。
+
+\subsection{summarize()}
+最重要的分组操作是摘要，如果用于计算单个摘要统计量，则会将数据框减少为每个组只有一行\footnote{summarise()，如果你更喜欢英式英语。}。
+
+你可以在一次调用中创建任意数量的 summarize()。有各种有用的摘要，但一个非常有用的摘要是 n()，它返回每组中的行数。
+\subsection{slice\_ 函数}
+有五个方便的函数允许你提取每个组中的特定行：
+\begin{itemize}
+    \item df $|>$ slice\_head(n = 1) 取出每组的第一行。
+    \item df $|>$ slice\_tail(n = 1) 占据每组的最后一行。
+    \item df $|>$ slice\_min(x, n = 1) 取列 x 具有最小值的行。
+    \item df $|>$ slice\_max(x, n = 1) 取列 x 具有最大列值的行。
+    \item df $|>$ slice\_sample(n = 1) 随机取一行。
+\end{itemize}
+
+你可以 \verb|n| 选择多行也可以使用 \verb|prop = 0.1| 选择（例如）每组中 10\% 的行。
+
+\subsection{按多个变量分组}
+你可以使用多个变量创建组。当你对按多个变量分组的小标题进行汇总时，每个汇总都会剥离最后一组。事后看来，这并不是让这个函数发挥作用的好方法，但是在不破坏现有代码的情况下很难进行更改。为了让发生的情况一目了然，dplyr 会显示一条消息，告诉你如何更改此行为。
+
+如果您对此行为感到满意，您可以明确请求它以抑制该消息：\verb|.groups = "drop_last"|，或者，通过设置不同的值来更改默认行为，例如，"drop" 删除所有分组或 "keep" 保留相同的组。
+
+\begin{tcolorbox}
+    这里主要是说 grouped\_df 类型的对象是有一个 groups 值会自动删除最后一个组。
+\end{tcolorbox}
+\subsection{取消分组}
+您可能还想从数据框中删除分组而没有使用 summarize(). 您可以使用 来执行此操作 ungroup()。
+\subsection{.by}
+dplyr 1.1.0 包含用于按操作分组的新的实验性语法，即参数 .by。\verb|group_by()| 并且 \verb|ungroup()| 不会消失，但您现在还可以使用 .by 参数在单个操作中进行分组。
+
+.by 适用于所有动词，其优点是您不需要使用参数 .groups 来抑制分组消息或者分组后再使用 \verb|ungroup()|。
+
+\section{案例研究：总量和样本量}
+\href{https://www.evanmiller.org/how-not-to-sort-by-average-rating.html}{How Not To Sort By Average Rating}
+
+\href{https://github.com/JPL-JUNO/Data-Analysis-and-Science/blob/main/R4DS/code/ch02/case_study.R}{警告：仅按均值排序可能会导致错误}

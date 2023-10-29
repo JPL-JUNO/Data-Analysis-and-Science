@@ -1,0 +1,11 @@
+Package: 
+Title: R for Data Science, 2nd
+Version:
+Authors: Stephen CUI
+Encoding: UTF-8
+Depends:
+    R (>=4.1.0)
+Imports:
+    dplyr
+    nycflights13
+    Lahman
