@@ -21,4 +21,41 @@
 
 多页面应用程序与模块配合得特别好，你将在 \autoref{ch18} 中了解这些模块。模块允许你以与划分用户界面相同的方式划分服务器功能，创建仅通过明确定义的连接进行交互的独立组件。
 \subsection{选项卡集}
-将页面分成多个部分的简单方法是使用 tabsetPanel() 以及与它近似的 tabPanel()。
+将页面分成多个部分的简单方法是使用 tabsetPanel() 以及与它近似的 tabPanel()。如果你想知道用户选择了哪个选项卡，你可以提供参数 id，它将成为 tabsetPanel() 的输入。
+
+注意：tabsetPanel()可以在应用程序中的任何位置使用；如果需要的话，将选项卡集嵌套在其他组件（包括选项卡集！）中是完全可以的。
+\subsection{导航列表和导航栏}
+由于选项卡是水平显示的，因此可以使用的选项卡数量存在根本限制，特别是当它们具有长标题时。 navbarPage() 与 navbarMenu() 提供两种替代布局，让你可以使用更多带有更长标题的选项卡。
+
+navlistPanel() 类似于 tabsetPanel()，但它不是水平运行选项卡标题，而是在侧边栏中垂直显示它们。它还允许你添加带有纯字符串的标题。另一种方法是使用 navbarPage()：它仍然水平运行选项卡标题，但你可以使用 navbarMenu() 添加下拉菜单以获得额外的层次结构级别。
+
+\section{Bootstrap}
+要继续您的应用程序定制之旅，您需要更多地了解 Shiny 使用的Bootstrap框架。Bootstrap 是 HTML 约定、CSS 样式和 JS 片段的集合，它们捆绑成一种方便的形式。Bootstrap 源自最初为 Twitter 开发的框架，在过去 10 年中已发展成为网络上最流行的 CSS 框架之一。
+
+作为一个 Shiny 开发者，你不需要对 Bootstrap 考虑太多，因为 Shiny 函数会自动为你生成 bootstrap 兼容的 HTML。但很高兴知道 Bootstrap 的存在，因为这样：
+
+\begin{itemize}
+    \item 您可以使用 bslib::bs\_theme() 自定义代码的视觉外观
+    \item 您可以使用class参数通过 Bootstrap 类名来自定义一些布局、输入和输出
+    \item  您可以创建自己的函数来生成Shiny 未提供的Bootstrap 组件
+\end{itemize}
+
+也可以使用完全不同的 CSS 框架。许多现有的 R 包通过包装 Bootstrap 的流行替代品使这一切变得容易：
+\begin{itemize}
+    \item shiny.semantic，由 Appsilon 开发，建立在 formantic UI 之上。
+    \item shinyMobile 由 RInterface 开发，构建于框架 7之上，专为移动应用程序而设计。
+    \item shinymaterial 由 Eric Anderson开发，建立在 Google 的 Material 设计框架之上。
+    \item shinydashboard 也由 RStudio 提供，提供了一个旨在创建仪表板的布局系统。
+\end{itemize}
+
+您可以在 \href{https://github.com/nanxstats/awesome-shiny-extensions}{awesome-shiny-extensions} 找到更完整且积极维护的列表。
+\section{主题}
+Bootstrap 在 R 社区中如此普遍，以至于很容易产生风格疲劳：一段时间后，每个 Shiny 应用程序和 Rmd 开始看起来都一样。解决方案是使用 bslib 包进行主题化。bslib 是相对较新的软件包，它允许您覆盖许多 Bootstrap 默认值，以创建独特的外观。
+\subsection{shiny 主题}
+更改应用程序整体外观的最简单方法是使用 的参数选择预制的 “\href{https://bootswatch.com/}{bootswatch}” 主题。
+\figures{fig6-9}{同一个应用程序具有四个 bootswatch 主题：darkly、flatly、sandstone 和 United}
+
+预览和自定义主题的一种简单方法是使用 \verb|bslib::bs_theme_preview(theme)|。 这将打开一个闪亮的应用程序，显示应用许多标准控件时主题的外观，并为您提供用于自定义最重要参数的交互式控件。
+
+\subsection{情节主题}
+如果您对应用程序的样式进行了大量自定义，您可能还需要自定义绘图以匹配。幸运的是，这真的很容易，这要归功于 thematic 包，它自动为 ggplot2、lattice和 base 提供主题。只需在您的服务器调用 \verb|thematic_shiny()| 功能即可。这将自动确定应用程序主题的所有设置。
