@@ -1,0 +1,99 @@
+\chapter{向用户反馈\label{ch08}}
+你通常可以通过让用户更深入地了解正在发生的事情来提高应用程序的可用性。当输入没有意义时，这可能会采取更好的消息形式，或者在需要很长时间的操作时采取进度条。
+
+我们将从\textbf{验证}技术开始，当输入（或输入组合）处于无效状态时通知用户。然后，我们将继续进行\textbf{通知}，向用户发送一般消息，以及\textbf{进度条}，进度条提供由许多小步骤组成的耗时操作的详细信息。最后，我们将讨论\textbf{危险}的操作，以及如何通过确认对话框或撤消操作的能力让用户安心。
+
+\section{验证}
+你可以向用户提供的第一个也是最重要的反馈是他们给了你错误的输入。
+
+\subsection{验证输入}
+向用户提供额外反馈的一个好方法是通过 shinyFeedback 包。使用它是一个两步过程。首先，添加 useShinyFeedback() 到ui. 这将设置所需的 HTML 和 JavaScript，以实现有吸引力的错误消息显示。然后在你的 server() 函数中，你调用反馈函数之一：feedback()、feedbackWarning()、feedbackDanger()和 feedbackSuccess()。他们都有三个关键参数：
+\begin{enumerate}
+    \item inputId，应放置反馈的输入的 id。
+    \item show，逻辑决定是否显示反馈。
+    \item text，要显示的文本。
+\end{enumerate}
+它们还具有 color 和 icon 可用于进一步自定义外观的参数。
+
+\figures{fig8-1}{用于 feedbackWarning() 显示无效输入的警告。左侧的应用程序显示有效的输入，右侧的应用程序显示无效（奇数）输入并带有警告消息。}
+
+请注意，虽然显示了错误消息，但输出仍会更新。通常你不希望出现这种情况，因为无效的输入可能会导致你不希望向用户显示的无信息 R 错误。要阻止输入触发响应性更改，你需要一个新工具：req()，“required”的缩写。当 req() 的输入不正确时，它会发送一个特殊信号来告诉 Shiny 响应式没有所需的所有输入，因此应该“暂停”。
+\subsection{用 req() 取消执行}
+It’s easiest to understand req() by starting outside of validation. You may have noticed that when you start an app, the complete reactive graph is computed even before the user does anything. This works well when you can choose meaningful default values for your inputs. But that’s not always possible, and sometimes you want to wait until the user actually does something. This tends to crop up with three controls:
+\begin{itemize}
+    \item 在 textInput() 中，你已经使用过 \verb|value = ""| 并且在用户键入某些内容之前不想执行任何操作。
+    \item 在 selectInput() 中，你提供了一个空选择 \verb|""| 并且在用户做出选择之前你不想执行任何操作。
+    \item 在 fileInput() 中，在用户上传任何内容之前，其结果为空。
+\end{itemize}
+
+我们需要某种方法来“暂停”响应，以便在某些条件成立之前不会发生任何事情。这就是 req() 的工作，它在允许响应式生产者继续之前检查所需的值。
+
+req() 通过发出特殊条件信号来工作\footnote{https://adv-r.hadley.nz/conditions.html}。这种特殊情况会导致所有下游响应和输出停止执行。从技术上讲，它使任何下游响应性消费者处于无效状态。
+
+req() 被设计为仅当用户提供了值时才会继续，而不管输入控件 \verb|req(input$x)| 的类型。如果需要，你还可以与自己的逻辑语句一起使用。
+\subsection{req() 及验证}
+\subsection{验证输出}
+当问题与单个输入相关时，shinyFeedback 非常有用。但有时无效状态是输入组合的结果。在这种情况下，将错误放在输入旁边（你会将其放在哪个输入旁边？）并没有真正意义，而是将其放在输出中更有意义。
+
+你可以使用 shiny 内置的工具 validate() 来做到这一点。当在响应或输出内部调用时，validate(message) 停止执行其余代码，而是在任何下游输出中显示 message。
+
+\section{通知}
+如果没有问题而你只是想让用户知道发生了什么，那么你需要一个通知。在 Shiny 中，通知是通过 showNotification() 和堆叠在页面右下角创建的。共有三种基本使用方法 showNotification()：
+\begin{enumerate}
+    \item 显示在固定时间后自动消失的瞬时通知。
+    \item 在进程启动时显示通知并在进程结束时将其删除。
+    \item 使用渐进式更新来更新单个通知。
+\end{enumerate}
+\subsection{瞬时通知}
+showNotification() 最简单的使用方法是使用单个参数调用它：你想要显示的消息。默认情况下，该消息将在 5 秒后消失，你可以通过设置覆盖该消息 duration，或者用户可以通过单击关闭按钮提前将其关闭。如果你想让通知更加突出，你可以将 type 参数设置为“message”、“warning”或“error”之一。
+
+\subsection{完成后移除}
+将通知的存在与长时间运行的任务联系起来通常很有用。在这种情况下，你希望在任务开始时显示通知，并在任务完成时删除通知。为此，你需要：
+\begin{itemize}
+    \item 设置duration = NULL，closeButton = FALSE使通知保持可见，直到任务完成。
+    \item 存储 showNotification() 返回的 id 值，然后将该值传递给 removeNotification()。最可靠的方法是使用on.exit()，这可以确保无论任务如何完成（成功或有错误），通知都会被删除。你可以在\href{https://withr.r-lib.org/articles/changing-and-restoring-state.html}{更改和恢复}状态中了解更多 on.exit() 信息。
+\end{itemize}
+
+一般来说，这些类型的通知将以响应方式存在，因为这可以确保长时间运行的计算仅在需要时重新运行。
+\subsection{渐进式更新}
+多次调用 showNotification() 通常会创建多个通知。你可以通过捕获第一个调用的 id 并在后续调用中使用它来更新单个通知。如果你的长时间运行的任务有多个子组件，这非常有用。
+\section{进度条}
+对于长时间运行的任务，最好的反馈类型是进度条。除了告诉你在此过程中所处的位置外，它还可以帮助你估计需要多长时间。不幸的是，这两种技术都存在相同的主要缺点：要使用进度条，你需要能够将大任务划分为已知数量的小块，每个小块花费大致相同的时间。这通常很困难，特别是因为底层代码通常是用 C 编写的，并且无法向你传达进度更新。
+\subsection{shiny}
+要使用 Shiny 创建进度条，你需要使用 withProgress() 和 incProgress()。你首先将其包装在 withProgress(). 这会在代码启动时显示进度条，并在完成后自动将其删除。然后在每一步之后调用 incProgress()，第一个参数是进度条增量的量。默认情况下，进度条从 0 开始，到 1 结束，因此增量除以 1 除以步数将确保进度条在循环结束时完成。
+\subsection{waiter}
+内置进度条对于基础知识来说非常有用，但如果你想要提供更多视觉选项的东西，你可以尝试 waiter 包。waiter 包使用 R6 对象将所有与进度相关的功能捆绑到一个对象中。
+
+默认显示是页面顶部的细进度条，但有多种方法可以自定义输出：
+\begin{itemize}
+    \item 你可以用使用以下之一覆盖默认值 theme：
+          \begin{itemize}
+              \item overlay：隐藏整个页面的不透明进度条
+              \item overlay-opacity：覆盖整个页面的半透明进度条
+              \item overlay-percent：不透明的进度条，还显示数字百分比。
+          \end{itemize}
+    \item 你可以通过设置 selector 参数将其覆盖在现有输入或输出上，而不是显示整个页面的进度条
+\end{itemize}
+
+\subsection{旋转器}
+有时你并不确切知道操作需要多长时间，而你只想显示一个动画旋转器，让用户放心某些事情正在发生。
+
+一个更简单的替代方案是使用Dean Attali 的 shinycssloaders 包。它使用 JavaScript 来监听 Shiny 事件，因此它甚至不需要服务器端的任何代码。相反，你只需使用 shinycssloaders::withSpinner() 包装你想要在无效时自动获取微调器的输出即可。
+
+\section{确认和撤销}
+有时某个操作可能存在危险，你要么想确保用户确实想要执行该操作，要么想让他们能够在为时已晚之前退出。
+\subsection{显式确认}
+保护用户免遭意外执行危险操作的最简单方法是要求明确的确认。最简单的方法是使用一个对话框，强制用户从一小组操作中进行选择。在 Shiny 中，你可以使用 modalDialog()。这被称为“模式”对话框，因为它创建了一种新的交互“模式”；在处理完该对话框之前，你无法与主应用程序交互。
+
+创建对话框时需要考虑一些小但重要的细节：
+\begin{itemize}
+    \item 这些按钮应该怎么称呼？最好是描述性的，因此避免使用是/否或继续/取消，以重述关键动词。
+    \item 您应该如何订购按钮？您是先取消（如 Mac），还是先继续（如 Windows）？您最好的选择是镜像您认为大多数人会使用的平台。
+    \item 你能让危险的选择更明显吗？在这里，我习惯于 \verb|class = "btn btn-danger"| 突出显示按钮的样式。
+\end{itemize}
+
+\subsection{撤消操作}
+显式确认对于不经常执行的破坏性操作最有用。如果你想减少频繁操作所造成的错误，你应该避免它。在这种情况下，更好的方法是在实际执行操作之前等待几秒钟，让用户有机会注意到任何问题并撤消它们。
+
+\subsection{垃圾}
+对于几天后您可能会后悔的操作，更复杂的模式是在计算机上实现垃圾箱或回收站等功能。当您删除文件时，它不会被永久删除，而是会被移至保留单元，这需要单独的操作才能清空。这就像类固醇的“撤消”选项；你有很多时间为你的行为后悔。这也有点像确认；您必须执行两个单独的操作才能使删除永久化。
