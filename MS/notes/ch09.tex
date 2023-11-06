@@ -1,2 +1,46 @@
 \chapter{上传和下载\label{ch09}}
 与用户之间传输文件是应用程序的常见功能。您可以使用它上传数据进行分析，或将结果下载为数据集或报告。
+\section{上传}
+\subsection{用户界面}
+支持文件上传所需的 UI 很简单：只需添加 fileInput() 到您的 UI 中即可。与大多数其他 UI 组件一样，只有两个必需参数： id 和 label。
+\subsection{服务器}
+服务器上的处理fileInput()比其他输入稍微复杂一些。大多数输入返回简单向量，但fileInput()返回包含四列的数据框：
+\begin{itemize}
+    \item name：用户计算机上的原始文件名。
+    \item size：文件大小，以字节为单位。默认情况下，用户只能上传最大 5 MB 的文件。您可以通过在启动 Shiny 之前设置 shiny.maxRequestSize 选项来增加此限制。例如，允许最多 10 MB 运行 \verb|options(shiny.maxRequestSize = 10 * 1024^2)|。
+    \item type：文件的“MIME 类型” 。这是文件类型的正式规范，通常源自扩展名，并且在 Shiny 应用程序中很少需要。
+    \item datapath：数据在服务器上上传的路径。将此路径视为临时路径：如果用户上传更多文件，则该文件可能会被删除。数据始终保存到临时目录并指定临时名称。
+\end{itemize}
+
+\subsection{上传数据}
+如果用户上传数据集，则需要注意两个细节：
+\begin{enumerate}
+    \item 在页面加载时 \verb|input$upload| 已初始化为 NULL ，因此您需要 \verb|req(input$upload)| 确保代码等待第一个文件上传。
+    \item 参数 accept 允许您限制可能的输入。最简单的方法是提供文件扩展名的字符向量，例如 accept = ".csv"。 但该accept 参数只是对浏览器的建议，并不总是强制执行，因此最好自己验证它。在 R 中获取文件扩展名的最简单方法是 \verb|tools::file_ext()| ，只需注意它会删除扩展名中的前缀.。
+\end{enumerate}
+\section{下载}
+\subsection{基础知识}
+同样，用户界面很简单：使用 downloadButton(id) 或 downloadLink(id) 为用户提供单击以下载文件的内容。
+
+与其他输出不同，downloadButton() 它不与渲染函数配对。相反，您使用 downloadHandler()。
+
+downloadHandler()有两个参数，两个都是函数：
+
+\begin{itemize}
+    \item filename 应该是一个不带参数的函数，返回文件名（作为字符串）。该函数的作用是创建将在下载对话框中向用户显示的名称。
+    \item content 应该是一个带有一个参数的函数，file 该参数是保存文件的路径。该函数的作用是将文件保存在 Shiny 知道的地方，以便它可以将其发送给用户。
+\end{itemize}
+
+这是一个不寻常的界面，但它允许 Shiny 控制文件的保存位置（以便可以将其放置在安全位置），同时您仍然可以控制该文件的内容。
+\subsection{下载报告}
+除了下载数据之外，您可能还希望应用程序的用户下载一份报告，该报告总结了 Shiny 应用程序中交互式探索的结果。这是相当大量的工作，因为您还需要以不同的格式显示相同的信息，但这对于高风险的应用程序非常有用。
+
+生成此类报告的一种有效方法是使用\href{https://bookdown.org/yihui/rmarkdown/parameterized-reports.html}{参数化的 RMarkdown} 文档。参数化的 RMarkdown 文件在 YAML 元数据中有一个 params 字段。
+
+还有一些其他技巧值得了解：
+\begin{itemize}
+    \item RMarkdown 在当前工作目录中工作，这在许多部署场景中都会失败（例如在 shinyapps.io 上）。您可以通过在应用程序启动时将报告复制到临时目录（即在服务器功能之外）来解决此问题
+    \item 默认情况下，RMarkdown 将在当前进程中渲染报表，这意味着它将继承 Shiny 应用程序的许多设置（如加载的包、选项等）。为了提高鲁棒性，我建议使用 callr 包在单独的 R 会话中运行 render()
+\end{itemize}
+
+shinymeta 包解决了一个相关问题：有时您需要能够将 Shiny 应用程序的当前状态转换为可以在将来重新运行的可重现报告。
