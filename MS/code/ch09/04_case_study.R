@@ -44,6 +44,7 @@ server <- function(input, output, session) {
 
 
   tidied <- reactive({
+    # 如果任何的清洗参数改变，将会导致从 raw 数据开始再次处理
     out <- raw()
     if (input$snake) {
       names(out) <- janitor::make_clean_names(names(out))
