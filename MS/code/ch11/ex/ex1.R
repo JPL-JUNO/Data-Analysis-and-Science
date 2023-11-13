@@ -1,0 +1,38 @@
+library(shiny)
+library(ambient)
+ui <- function(request) {
+  fluidPage(
+    sidebarLayout(
+      sidebarPanel(
+        sliderInput("freq", "frequency", value = 1, min = -2, max = 2, step = 0.01),
+        selectInput("fractal", "fractal", choices = c("none", "fbm", "billow", "rigid-multi"), selected = "fbm"),
+        sliderInput("lac", "lacunarity", value = 2, min = 0, max = 5, step = 0.001),
+        sliderInput("gain", "gain", value = 0.5, min = 0, max = 1, step = 0.001),
+        bookmarkButton()
+      ),
+      mainPanel(
+        plotOutput("fig")
+      )
+    )
+  )
+}
+server <- function(input, output, session) {
+  simplex <- reactive({
+    noise_simplex(
+      dim = c(100, 100),
+      frequency = input$freq,
+      fractal = input$fractal,
+      lacunarity = input$lac,
+      gain = input$gain
+    )
+  })
+
+  output$fig <- renderPlot(
+    {
+      plot(as.raster(normalise(simplex())))
+    },
+    res = 96
+  )
+}
+
+shinyApp(ui, server, enableBookmarking = "url")
