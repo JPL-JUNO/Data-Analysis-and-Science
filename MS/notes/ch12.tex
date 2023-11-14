@@ -1,0 +1,27 @@
+\chapter{\label{ch12}}
+\section{动机}
+\begin{description}
+    \item[env-variable]
+        An environment variable is a “programming” variable that you create with \verb|<-|. \verb|input$var| is an env-variable.
+    \item[data-variable] A data frame variable is a “statistical” variable that lives inside a data frame. carat is a data-variable.
+\end{description}
+有了这些新术语，我们可以使间接问题变得更加清晰：我们有一个数据变量(carat) 存储在环境变量(\verb|input$var|) 中，并且我们需要某种方法来告诉 dplyr。有两种略有不同的方法可以执行此操作，具体取决于你正在使用的函数是“数据屏蔽”函数还是“整齐选择”函数。
+
+\section{数据屏蔽}
+数据屏蔽函数允许你使用“当前”数据框中的变量，而无需任何额外的语法。它在许多 dplyr 函数中使用，例如 arrange()、filter()、group\_by()、mutate() 和 summarise()，以及 ggplot2 中的 aes()。数据屏蔽很有用，因为它允许你使用数据变量而无需任何附加语法。
+
+在数据屏蔽函数内部，你可以使用 .data 或者 .env 如果你想明确你正在谈论的是数据变量还是环境变量。
+
+\verb|diamonds %>% filter(.data$carat > .env$min)|
+
+\section{整齐选择}
+除了数据屏蔽之外，整洁评估还有另一个重要部分：整洁选择。Tidy-selection 提供了一种按位置、名称或类型选择列的简洁方法。它用在 dplyr::select() 和d plyr::across() 以及 tidyr 中的许多函数中，例如 pivot\_longer(), pivot\_wider(), separate(), extract(), 和 unite()。
+\subsection{间接}
+要间接引用变量，请使用 any\_of() 或则 all\_of()：两者都期望包含数据变量名称的字符向量环境变量。唯一的区别是，如果你提供输入中不存在的变量名，会发生什么：all\_of() 会抛出错误，而 any\_of() 会默默地忽略它。
+
+\subsection{Tidy-Selection and Data-Masking}
+当你使用使用 tidy-selection 的函数时，使用多个变量非常简单：你只需将变量名称的字符向量传递到 any\_of() 或 all\_of() 即可。如果我们也能在数据屏蔽函数中做到这一点，不是很好吗？这就是 dplyr 1.0.0 中添加 across() 函数的想法。它允许你在数据屏蔽函数中使用整洁选择。
+
+across() 通常与一个或两个参数一起使用。第一个参数选择变量，在 group\_by() 或 distinct() 等函数中很有用。
+
+第二个参数是应用于每个选定列的函数（或函数列表）。这使得它非常适合 mutate() 与 summarise() 当你希望以某种方式转换每个变量的情况。
