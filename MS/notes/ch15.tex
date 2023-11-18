@@ -1,0 +1,24 @@
+\chapter{反应式构建块\label{ch15}}
+\section{响应值}
+有两种类型的响应值：
+\begin{itemize}
+    \item 由 reactiveVal() 创建的单个响应值。
+    \item 由 reactiveValues() 创建的响应值列表。
+\end{itemize}
+
+大多数 R 对象都具有 \verb|copy_on_modify| 语义，这意味着如果您将相同的值分配给两个名称，则一旦您修改一个名称，连接就会中断。对于反应性值来说，情况并非如此——它们总是保留对同一值的引用，以便修改任何副本都会修改所有值。
+\section{隔离代码}
+为了结束本章，我将讨论两个重要的工具，用于精确控制反应图失效的方式和时间。在本节中，我将讨论 isolate()，该工具为 observeEvent() 和 eventReactive() 提供支持，并且可以让您避免在不需要时创建反应性依赖项。在下一节中，您将了解 invalidateLater()，它允许您按计划生成反应性失效。
+\subsection{isolate()}
+观察者通常与反应值结合在一起，以便跟踪状态随时间的变化。
+\subsection{observeEvent() 和 eventReactive()}
+observeEvent() 和 eventReactive() 具有允许您控制其操作细节的附加参数：
+\begin{enumerate}
+    \item 默认情况下，这两个函数都会忽略产生的任何事件NULL（或者在操作按钮的特殊情况下，忽略 0）。使用 ignoreNULL = FALSE 来处理 NULL 值。
+    \item 默认情况下，这两个函数在您创建它们时都会运行一次。用 ignoreInit = TRUE 跳过此运行。
+    \item 仅对 observeEvent()，您可以设置 once = TRUE 来仅处理程序一次。
+\end{enumerate}
+\section{定时失效}
+isolate() 减少反应图失效的时间。本节的主题 invalidateLater() 做了相反的事情：它允许您在没有数据更改时使反应图无效。
+\subsection{轮询}
+一个有用的 invalidateLater() 应用是将 Shiny 连接到 R 外部正在更改的数据。
