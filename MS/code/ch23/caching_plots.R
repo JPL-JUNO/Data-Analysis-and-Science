@@ -9,7 +9,7 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
   output$diamonds <- renderPlot({
-    ggplot(diamonds, aes(.data[[input$x]], .data[[input$y]]))+
+    ggplot(diamonds, aes(.data[[input$x]], .data[[input$y]])) +
       geom_point()
   }) |> bindCache(input$x, input$y)
 }
