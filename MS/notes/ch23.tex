@@ -1,0 +1,25 @@
+\chapter{性能}
+\section{基准}
+通过基准测试，您可以检查多个用户的应用程序的性能，而无需实际让真实的人接触可能很慢的应用程序。或者，如果您想为数百或数千个用户提供服务，基准测试将帮助您确定每个进程可以处理多少用户，从而确定您需要使用多少台服务器。
+
+基准测试过程由 shinyloadtest 包支持，并具有三个基本步骤：
+\begin{enumerate}
+    \item 使用 \verb|shinyloadtest::record_session()| 录制模拟典型用户的脚本。
+    \item 使用 shinycannon 命令行工具与多个并发用户一起重播该脚本。
+    \item 使用 \verb|shinyloadtest::report()| 分析结果。
+\end{enumerate}
+\section{缓存}
+缓存是一种非常强大的技术，可以提高代码性能。基本思想是记录每次调用函数的输入和输出。当使用一组已经看到的输入调用缓存函数时，它可以重播记录的输出而无需重新计算。\href{https://memoise.r-lib.org/}{memoise} 等软件包提供了用于缓存常规 R 函数的工具。
+\subsection{基础知识}
+bindCache() 很容易使用。只需将要缓存的 reactive() 或 render* 函数通过管道传递到：bindCache()。
+
+\subsection{缓存反应式}
+使用缓存的一个常见地方是与 Web API 结合使用——即使 API 非常快，您仍然必须发送请求，等待服务器响应，然后解析结果。因此，缓存 API 结果通常会带来很大的性能提升。
+\subsection{缓存范围}
+默认情况下，绘图缓存存储在内存中，永远不会大于 200 MB，在单个进程的所有用户之间共享，并且在应用程序重新启动时丢失。您可以为单个反应或整个会话更改此默认值：
+\begin{itemize}
+    \item \verb|bindCache(…, cache = "session")| 将为每个用户会话使用单独的缓存。这确保了私有数据不会在用户之间共享，但它也降低了缓存的好处。
+    \item 使用 \verb|shinyOptions(cache = cachem::cache_mem())| 或 \verb|shinyOptions(cache = cachem::cache_disk())| 更改整个应用程序的默认缓存。您可以使用缓存在多个进程之间共享，并在应用程序重新启动时持续存在。
+\end{itemize}
+\section{其他优化}
+许多应用程序中还出现了另外两种优化：按计划执行数据导入和操作，以及仔细管理用户期望。
