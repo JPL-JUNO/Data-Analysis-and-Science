@@ -1,0 +1,49 @@
+\chapter{测试\label{ch21}}
+测试首先声明意图（\verb|as.vector()  strips names|），然后使用常规 R 代码生成一些测试数据。然后使用期望（以 \verb|expect_| 开头的函数）将测试数据与预期结果进行比较。第一个参数是要运行的一些代码，第二个参数描述了预期结果。
+
+\section{测试函数}
+\subsection{基本结构}
+测试分为三个级别：
+\begin{description}
+    \item[文件] 所有测试文件都位于 \verb|tests/testthat| 中，并且每个测试文件应对应于 \verb|R/| 中的一个代码文件，例如 \verb|R/module.R| 中的代码应由 \verb|tests/testthat/test-module.R| 中的代码进行测试。幸运的是，您不必记住该约定：只需用 \verb|usethis::use_test()| 自动创建或定位与当前打开的 R 文件相对应的测试文件。
+    \item[测试] 每个文件都被分解为测试，即对 \verb|test_that()| 的调用。 测试通常应该检查函数的单个属性。很难准确描述这意味着什么，但一个很好的启发是，您可以轻松地在 \verb|test_that()| 的第一个参数中描述测试。
+    \item[期待] 每个测试都包含一个或多个期望，其函数以 \verb|expect_|。 它们准确地定义了您期望代码执行的操作，无论是返回特定值、引发错误还是其他操作。在本章中，我将讨论对 Shiny 应用程序最重要的期望，但您可以在 \href{https://testthat.r-lib.org/reference/index.html#section-expectations}{testthat} 网站上查看完整列表。
+\end{description}
+
+测试的艺术在于弄清楚如何编写测试来明确定义函数的预期行为，而不依赖于将来可能改变的偶然细节。
+\subsection{主要期望}
+在测试函数时，您会经常使用两个期望：\verb|expect_equal()| 和 \verb|expect_error()|。与所有期望函数一样，第一个参数是要检查的代码，第二个参数是预期结果：在 \verb|expect_equal()| 的情况下为预期值，在 \verb|expect_error()| 的情况下为预期错误文本。
+
+使用 \verb|expect_equal()| 时请记住，您不必测试整个对象：通常最好只测试您感兴趣的组件。
+
+对一些 \verb|expect_equal()| 的特殊情况，可以节省您的打字时间：
+\begin{itemize}
+    \item \verb|expect_true(x)| 和 \verb|expect_false(x)| 相当于 \verb|expect_equal(x, TRUE)| 和 \verb|expect_equal(x, FALSE)|。 \verb|expect_null(x)| 相当于 \verb|expect_equal(x, NULL)|。
+    \item \verb|expect_named(x, c("a", "b", "c"))| 相当于 \verb|expect_equal(names(x), c("a", "b", "c"))|，但有选项 \verb|ignore.order| 和 \verb|ignore.case|。 \verb|expect_length(x, 10)| 相当于 \verb|expect_equal(length(x), 10)|。
+\end{itemize}
+
+还有一些函数可以实现针对向量 \verb|expect_equal()| 的宽松版本：
+\begin{itemize}
+    \item \verb|expect_setequal(x, y)| 测试 x 中的每个值是否出现在 y 中，以及 y 中的每个值是否出现在 x 中。
+    \item \verb|expect_mapequal(x, y)| 测试 x 和 y 具有相同的名称并且 \verb|x[names(y)] == y|。
+\end{itemize}
+
+测试代码是否生成错误通常很重要，您可以使用 \verb|expect_error()|。请注意，\verb|expect_error()| 的第二个参数是正则表达式 - 目标是找到与您期望的错误匹配的一小段文本，并且不太可能与您不期望的错误匹配。
+
+或者使用 \verb|expect_snapshot()|，我们将很快讨论。 \verb|expect_error()| 还带有变体 \verb|expect_warning()|，\verb|expect_message()| 用于以与错误相同的方式测试警告和消息。这些对于测试 Shiny 应用程序很少需要，但对于测试包非常有用。
+\subsection{用户界面函数}
+您可以使用相同的基本思想来测试从 UI 代码中提取的功能。但这些需要一个新的期望，因为手动输入所有 HTML 会很乏味，所以我们使用快照测试。快照期望与其他期望的主要不同之处在于，期望结果存储在单独的快照文件中，而不是存储在代码本身中。当您设计复杂的用户界面设计系统时，快照测试最有用，这超出了大多数应用程序的范围。
+
+快照测试的关键思想是将预期结果存储在单独的文件中：这样可以将大量数据排除在测试代码之外，并且意味着您无需担心在字符串中转义特殊值。
+\section{工作流程}
+\subsection{代码覆盖率}
+验证您的测试是否测试了您认为他们正在测试的内容非常有用。一个很好的方法是使用“代码覆盖率”来运行测试并跟踪运行的每一行代码。然后，您可以查看结果，看看哪些代码行从未被测试触及，并让您有机会反思是否测试了代码中最重要、风险最高或最难编程的部分。它不能替代对代码的思考——您可能拥有 100\% 的测试覆盖率，但仍然存在错误。但它是一个有趣且有用的工具，可以帮助您思考什么是重要的，特别是当您有复杂的嵌套代码时。
+\section{测试反应性}
+\subsection{限制}
+testServer() 是您的应用程序的模拟。模拟很有用，因为它可以让您快速测试反应式代码，但它并不完整。
+\begin{itemize}
+    \item  与现实世界不同，时间不会自动前进。因此，如果您想测试依赖于 reactiveTimer() 或 invalidateLater() 的代码，则需要通过调用 \verb|session$elapse(millis = 300)| 来手动提前时间。
+
+    \item testServer() 忽略用户界面。这意味着输入不会获得默认值，并且 JavaScript 无法工作。最重要的是，这意味着您无法测试这些 update* 函数，因为它们通过将 JavaScript 发送到浏览器来模拟用户交互来工作。
+\end{itemize}
+\section{测试 JavaScript}
