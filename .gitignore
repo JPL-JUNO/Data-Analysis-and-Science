@@ -25,3 +25,6 @@ P4F/numbers.xlsx
 R4DS/.vscode/settings.json
 *.vscode
 *.rds
+*.user
+_RData
+_Rhistory
