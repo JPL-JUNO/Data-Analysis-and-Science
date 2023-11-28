@@ -14,15 +14,15 @@ def mape(y_true, y_pred) -> float:
     return 100 * np.mean(np.abs((y_true - y_pred) / y_true))
 
 
-def simulate_process(is_stationary: bool) -> ndarray:
+def simulate_process(is_stationary: bool, n: int = 400) -> ndarray:
     np.random.seed(42)
 
-    process = np.zeros(400)
+    process = np.zeros(n)
     if is_stationary:
         alpha = .5
     else:
         alpha = 1
-    for i in range(399):
+    for i in range(n-1):
         process[i+1] = alpha * process[i] + np.random.standard_normal()
 
     return process
