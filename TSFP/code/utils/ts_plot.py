@@ -49,7 +49,7 @@ def plot_pred(df: ndarray, ways: list = ['mean', 'last', 'drift'],
               shapes: list = ['r-.', 'g--', 'k:']) -> tuple[Figure, Axes]:
     fig, ax = plt.subplots()
     for way, shape in zip(ways, shapes):
-        ax.plot(df['pred_' + way], shape, label='way')
+        ax.plot(df['pred_' + way], shape, label=way)
     ax.legend()
     ax.set_xlabel('Timesteps')
     ax.set_ylabel('Value')
