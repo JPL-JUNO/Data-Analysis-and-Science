@@ -1,0 +1,8 @@
+\chapter{\label{ch04}}
+\section{Defining a moving average process}
+A \textbf{moving average process}, or the moving average (MA) model, states that the current value is linearly dependent on the current and past error terms. The error terms are assumed to be mutually independent and normally distributed, just like white noise.
+\section{Forecasting a moving average process}
+对于预测范围，移动平均模型具有特殊性。 MA(q) 模型不允许我们一次性预测未来多步。 请记住，移动平均模型线性依赖于过去的误差项，并且这些项在数据集中未观察到 - 因此必须递归估计它们。 这意味着对于 MA(q) 模型，我们只能预测未来的 q 步。 超过该点所做的任何预测都不会包含过去的误差项，并且模型只会预测平均值。 因此，对未来超过 q 步的预测没有附加值，因为预测将持平，因为仅返回平均值，这相当于基线模型。
+\begin{tcolorbox}[title=Forecasting using the MA(q) model]
+    When using an MA(q) model, forecasting beyond q steps into the future will simply return the mean, because there are no error terms to estimate beyond q steps. We can use rolling forecasts to predict up to q steps at a time in order avoid predicting only the mean of the series.
+\end{tcolorbox}
