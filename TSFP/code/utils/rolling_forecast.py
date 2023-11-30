@@ -45,6 +45,7 @@ methods = {'mean': _naive_mean,
 
 def rolling_forecast(df: DataFrame, train_len: int, horizon: int,
                      window: int, method: str) -> list:
+    # BUG, 如果预测长度不能被 window 整除，是不是出现没有预测的情况
     total_len = train_len + horizon
     assert method in methods, '预测方法不存在'
 

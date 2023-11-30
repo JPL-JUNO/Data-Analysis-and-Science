@@ -63,6 +63,6 @@ def plot_metrics_compare(x: list, y: list, metrics: str = 'MSE'):
     ax.set_xlabel('Methods')
     ax.set_ylabel(metrics)
     for index, value in enumerate(y):
-        plt.text(x=index, y=value+.5, s=str(round(value, 2)), ha='center')
+        plt.text(x=index, y=value*1.03, s=str(round(value, 2)), ha='center')
     plt.tight_layout()
     return fig, ax
