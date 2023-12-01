@@ -38,9 +38,21 @@ def _ma(df, train_len, total_len, window):
     return pred
 
 
+def _ar(df, train_len, total_len, window):
+    pred = []
+    for i in range(train_len, total_len, window):
+        model = SARIMAX(df[:i], order=(3, 0, 0))
+        res = model.fit(disp=False)
+        predictions = res.get_prediction(0, i + window - 1)
+        oos_pred = predictions.predicted_mean.iloc[-window:]
+        pred.extend(oos_pred)
+    return pred
+
+
 methods = {'mean': _naive_mean,
            'last': _naive_last,
-           'MA': _ma}
+           'MA': _ma,
+           'AR': _ar, }
 
 
 def rolling_forecast(df: DataFrame, train_len: int, horizon: int,
