@@ -23,8 +23,22 @@ You can see how fitting a more complex model can penalize the AIC score: as the 
 
 The likelihood function measures the goodness of fit of a model. It can be viewed as the opposite of the distribution function. Given a model with fixed parameters, the distribution function will measure the probability of observing a data point. The likelihood function flips the logic. \textbf{Given a set of observed data, it will estimate how likely it is that different model parameters will generate the observed data}.
 
+\subsection{Understanding residual analysis}
+
 \subsubsection*{QUANTITATIVE ANALYSIS: APPLYING THE LJUNG-BOX TEST}
 The Ljung-Box test is a statistical test that determines whether the autocorrelation of a group of data is significantly different from 0.
 
 In time series forecasting, we apply the Ljung-Box test on the model's residuals to test whether they are similar to white noise. The null hypothesis states that the data is independently distributed, meaning that there is no autocorrelation. If the p-value is larger than 0.05, we cannot reject the null hypothesis, meaning that the residuals are independently distributed. Therefore, there is no autocorrelation, the residuals are similar to white noise, and the model can be used for forecasting. If the p-value is less than 0.05, we reject the null hypothesis, meaning that our residuals are not independently distributed and are correlated. The model cannot be used for forecasting.
 
+
+\section*{Summary}
+\begin{itemize}
+    \item The autoregressive moving average model, denoted as ARMA(p,q), is the combination of the autoregressive model AR(p) and the moving average model MA(q).
+    \item An ARMA(p,q) process will display a decaying pattern or a sinusoidal pattern on both the ACF and PACF plots. Therefore, they cannot be used to estimate the orders p and q.
+    \item The general modeling procedure does not rely on the ACF and PACF plots. Instead, we fit many ARMA(p,q) models and perform model selection and residual analysis.
+    \item Model selection is done with the Akaike information criterion (AIC). It quantifies the information loss of a model, and it is related to the number of parameters in a model and its goodness of fit. The lower the AIC, the better the model.
+    \item The AIC is relative measure of quality. It returns the best model among other models. For an absolute measure of quality, we perform residual analysis.
+    \item Residuals of a good model must approximate white noise, meaning that they must be uncorrelated, normally distributed, and independent.
+    \item The Q-Q plot is a graphical tool for comparing two distributions. We use it to compare the distribution of the residuals against a theoretical normal distribution. If the plot shows a straight line that lies on y = x, then both distributions are similar. Otherwise, it means that the residuals are not normally distributed.
+    \item The Ljung-Box test allows us to determine whether the residuals are correlated or not. The null hypothesis states that the data is independently distributed and uncorrelated. If the returned p-values are larger than 0.05, we cannot reject the null hypothesis, meaning that the residuals are uncorrelated, just like white noise.
+\end{itemize}
