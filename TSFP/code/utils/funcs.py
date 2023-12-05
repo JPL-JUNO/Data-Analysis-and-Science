@@ -34,3 +34,12 @@ def mean_over_time(ts: ndarray) -> list:
 
 def var_over_time(ts: ndarray) -> list:
     return [np.var(ts[:i]) for i in range(1, len(ts))]
+
+
+def add_original_feature(df, df_new):
+    df_new['open'] = df['Open']
+    df_new['open_1'] = df['Open'].shift(1)
+    df_new['close_1'] = df['Close'].shift(1)
+    df_new['high_1'] = df['High'].shift(1)
+    df_new['low_1'] = df['Low'].shift(1)
+    df_new['volume_1'] = df['Volume'].shift(1)
