@@ -66,11 +66,16 @@ def _arma(df, train_len, total_len, window,
     return pred
 
 
+def _arima(endog, order_list: list, **kwargs):
+    pass
+
+
 methods = {'mean': _naive_mean,
            'last': _naive_last,
            'MA': _ma,
            'AR': _ar,
-           'arma': _arma, }
+           'arma': _arma,
+           'arima': _arima, }
 
 
 def rolling_forecast(df: DataFrame, train_len: int, horizon: int,
