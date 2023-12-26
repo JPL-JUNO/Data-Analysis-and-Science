@@ -1,1 +1,10 @@
 \chapter{Uploading, Downloading, and Manipulating Data\label{ch02}}
+\section{An introduction to caching}
+A good analogy for an app's cache is a human's short-term memory, where we keep bits of information close at hand that we think might be useful. When something is in our short-term memory, we don't have to think very hard to get access to that piece of information. In the same way, when we cache a piece of information in Streamlit, we are making a bet that we'll use that information often.
+
+The way Streamlit caching works more specifically is by storing the results of a function in our app, and if that function is called with the same parameters by another user (or by us if we rerun the app), Streamlit does not run the same function but instead loads the result of the function from memory.
+
+There are two Streamlit caching functions, one for data (\verb|st.cache_data|) and one for resources like database connections or machine learning models (\verb|st.cache_resource|).
+
+\section{Persistence with Session State}
+Enter \verb|st.session_state|. Session State is a Streamlit feature that is a global dictionary that persists through a user’s session.
