@@ -18,6 +18,8 @@ if penguin_file is not None:
     penguins_df = pd.read_csv(penguin_file)
 else:
     penguins_df = pd.read_csv('../../data/penguins.csv')
+    # penguins_df = st.stop()
+
 # st.write(penguins_df.head())
 st.markdown(
     'Use this Streamlit app to make your own scatter plot about penguins!')
@@ -32,7 +34,20 @@ selected_y_var = st.selectbox('What about the y?',
                               ['bill_length_mm', 'bill_depth_mm',
                                'flipper_length_mm', 'body_mass_g'])
 
+selected_gender = st.selectbox('What gender do you want to filter for?',
+                               ['all penguins', 'male penguins', 'female penguins'])
+
+if selected_gender == 'male penguins':
+    penguins_df = penguins_df[penguins_df['sex'] == 'male']
+elif selected_gender == 'female penguins':
+    penguins_df = penguins_df[penguins_df['sex'] == 'female']
+else:
+    pass
+
 # penguins_df = penguins_df[penguins_df['species'] == selected_species]
+
+sns.set_style('darkgrid')
+markers = {'Adelie': 'X', "Gentoo": 's', 'Chinstrap': 'o'}
 
 alt_chart = (
     alt.Chart(penguins_df,
@@ -44,4 +59,5 @@ alt_chart = (
     .interactive()  # 设置为交互性的
 )
 # 使用整个容器的宽度
+
 st.altair_chart(alt_chart, use_container_width=True)
