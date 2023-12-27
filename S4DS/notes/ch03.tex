@@ -7,3 +7,5 @@ Other Streamlit users will have less experience in Pythonic graphing, and especi
 
 \subsection{Streamlit’s built-in graphing functions}
 There are four built-in functions for graphing – \verb|st.line_chart()|, \verb|st.bar_chart()|, \verb|st.area_chart()|, and \verb|st.map()|.
+\subsection{Bokeh}
+We can call Bokeh graphs using the same format as Plotly. First, we create the Bokeh graph, and then we use the \verb|st.bokeh_chart()| function to write the app to Streamlit. In Bokeh, we have to first instantiate a Bokeh figure object, and then change aspects of that figure before we can plot it out. The important lesson here is that if we change an aspect of the Bokeh figure object after we call the \verb|st.bokeh_chart()| function, we will not change the graph shown on the Streamlit app.

@@ -6,6 +6,11 @@
 @Description  : 
 """
 
+import altair as alt
+from bokeh.plotting import figure
+import matplotlib.pyplot as plt
+import seaborn as sns
+import datetime as dt
 import plotly.express as px
 import numpy as np
 import streamlit as st
@@ -46,3 +51,41 @@ st.markdown('### Plotly')
 
 fig = px.histogram(trees_df['dbh'])
 st.plotly_chart(fig)
+
+st.markdown('### Matplotlib and Seaborn')
+trees_df['age'] = (pd.to_datetime('today') -
+                   pd.to_datetime(trees_df['date'])).dt.days
+
+st.markdown('#### Seaborn Chart')
+fig_sb, ax_sb = plt.subplots()
+ax_sb = sns.histplot(trees_df['age'])
+plt.xlabel('Aga (Days)')
+st.pyplot(fig_sb)
+
+st.markdown('#### Matplotlib Chart')
+fig_mpl, ax_mpl = plt.subplots()
+ax_mpl = plt.hist(trees_df['age'])
+plt.xlabel('Aga (Days)')
+st.pyplot(fig_mpl)
+
+st.markdown('### Bokeh')
+
+scatterplot = figure(title='Bokeh Scatterplot')
+scatterplot.scatter(trees_df['dbh'], trees_df['site_order'])
+scatterplot.yaxis.axis_label = 'site_order'
+scatterplot.xaxis.axis_label = 'dbh'
+st.bokeh_chart(scatterplot)
+
+st.markdown('### Bokeh')
+df_caretaker = trees_df.groupby(['caretaker']).count()['tree_id'].reset_index()
+df_caretaker.columns = ['caretaker', 'tree_count']
+
+fig = alt.Chart(df_caretaker).mark_bar().encode(x='caretaker', y='tree_count')
+st.altair_chart(fig)
+
+st.write('Altair also allows us to summarize our data directly within the y value of mark_bar():')
+fig = alt.Chart(trees_df).mark_bar().encode(x='caretaker', y='count(*):Q')
+st.altair_chart(fig)
+
+st.markdown('### PyDeck')
+st.write('跳过对地图的绘制')
