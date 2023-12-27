@@ -5,6 +5,8 @@
 @CreatedTime  : 2023-12-27 22:02:44
 @Description  : 
 """
+import seaborn as sns
+import matplotlib.pyplot as plt
 import pickle
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
@@ -36,3 +38,11 @@ rf_pickle.close()
 output_pickle = open('output_penguin.pickle', 'wb')
 pickle.dump(uniques, output_pickle)
 output_pickle.close()
+
+fig, ax = plt.subplots()
+ax = sns.barplot(x=rfc.feature_importances_, y=features.columns)
+plt.title('Which features are the most important feo species predictions?')
+plt.xlabel('Importances')
+plt.ylabel('Feature')
+plt.tight_layout()
+plt.savefig('feature_importance.png')
