@@ -29,3 +29,4 @@ R4DS/.vscode/settings.json
 _RData
 _Rhistory
 TSFP/code/Token
+*.pickle
