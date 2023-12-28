@@ -5,6 +5,8 @@
 @CreatedTime  : 2023-12-27 22:14:35
 @Description  : 
 """
+import matplotlib.pyplot as plt
+import seaborn as sns
 import streamlit as st
 import pickle
 import pandas as pd
@@ -104,3 +106,21 @@ st.write(
     species. The vertical line represents
     your the inputted value."""
 )
+fig, ax = plt.subplots()
+ax = sns.displot(x=penguin_df['bill_length_mm'],
+                 hue=penguin_df['species'])
+plt.axvline(bill_length)
+plt.title('Bill Length by Species')
+st.pyplot(ax)
+
+fig, ax = plt.subplots()
+ax = sns.displot(x=penguin_df["bill_depth_mm"], hue=penguin_df["species"])
+plt.axvline(bill_depth)
+plt.title("Bill Depth by Species")
+st.pyplot(ax)
+
+fig, ax = plt.subplots()
+ax = sns.displot(x=penguin_df["flipper_length_mm"], hue=penguin_df["species"])
+plt.axvline(flipper_length)
+plt.title("Flipper Length by Species")
+st.pyplot(ax)

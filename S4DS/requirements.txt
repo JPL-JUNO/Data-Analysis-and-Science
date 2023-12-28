@@ -1,0 +1,6 @@
+transformers
+streamlit
+pandas
+matplotlib
+plotly
+openai
