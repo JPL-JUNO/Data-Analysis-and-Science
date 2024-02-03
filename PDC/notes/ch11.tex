@@ -1,3 +1,32 @@
 \chapter{Combining Pandas Objects\label{ch11}}
 \section{引言}
 有多种选项可用于将两个或多个 DataFrame 或 Series 组合在一起。 追加方法是最不灵活的，只允许将新行追加到 DataFrame 中。concat 方法非常通用，可以在任一轴上组合任意数量的 DataFrame 或 Series。join 方法通过将一个 DataFrame 的列与其他 DataFrame 的索引对齐来提供快速查找。merge 方法提供了类似 SQL 的功能来将两个 DataFrame 连接在一起。
+\section{Understanding the differences between concat, join, and merge}
+The .merge and .join DataFrame (and not Series) methods and the concat function all provide very similar functionality to combine multiple pandas objects together.
+
+\begin{itemize}
+    \item concat
+          \begin{itemize}
+              \item A pandas function
+              \item Combines two or more pandas objects vertically or horizontally
+              \item Aligns only on the index
+              \item Errors whenever a duplicate appears in the index
+              \item Defaults to outer join with the option for inner join
+          \end{itemize}
+    \item .join
+          \begin{itemize}
+              \item A DataFrame method
+              \item Combines two or more pandas objects horizontally
+              \item Aligns the calling DataFrame's column(s) or index with the other object's index (and not the columns)
+              \item Handles duplicate values on the joining columns/index by performing a Cartesian product
+              \item Defaults to left join with options for inner, outer, and right
+          \end{itemize}
+    \item .merge
+          \begin{itemize}
+              \item A DataFrame method
+              \item Combines exactly two DataFrames horizontally
+              \item Aligns the calling DataFrame's column(s) or index with the other DataFrame's column(s) or index
+              \item Handles duplicate values on the joining columns or index by performing a cartesian product
+              \item Defaults to inner join with options for left, outer, and right
+          \end{itemize}
+\end{itemize}
