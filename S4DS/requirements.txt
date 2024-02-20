@@ -12,3 +12,5 @@ streamlit-pandas-profiling
 streamlit-folium
 streamlit-extras
 ydata_profiling
+google-cloud-bigquery
+snowflake-connector-python
