@@ -1,0 +1,10 @@
+\chapter{Beautifying Streamlit Apps\label{ch06}}
+\section{Summary}
+\begin{description}
+    \item[Working with columns in Streamlit]Streamlit allows us to format our app into dynamic columns using the \verb|st.columns()| feature. We can divide our Streamlit app into multiple columns of different lengths and then treat each column as its own unique space (called a \textbf{container}) in our app to include text, graphs, images, or anything else we would like.
+    \item[Using Streamlit tabs]\verb|st.tabs| works very similarly to \verb|st.columns|, but instead of telling Streamlit the number of tabs we want, we instead pass along the names of the tabs and then use now-familiar `with` statements to place content into the tab.
+    \item[Using the Streamlit sidebar]We can use the Streamlit \verb|sidebar|, which allows us to place a minimizable sidebar on the left side of the Streamlit app and add any Streamlit component to it.
+    \item[Picking colors with a color picker]Streamlit's approach to this problem is \verb|st.color_picker()|, which lets the user pick a color as a part of their user input, and returns that color in a hex string (which is a unique string that defines very specific color shades used by most graphing libraries as input).
+    \item[Multi-page apps]Streamlit 创建多页面应用程序的方式是在与我们的 Streamlit 应用程序相同的目录中查找名为 \verb|pages| 的文件夹，然后将 \verb|pages| 文件夹内的每个 Python 文件作为其自己的 Streamlit 应用程序运行。
+    \item[Editable DataFrames]Streamlit released \verb|st.data_editor|, a way to give users edit ability on top of an \verb|st.dataframe-style| interface.
+\end{description}

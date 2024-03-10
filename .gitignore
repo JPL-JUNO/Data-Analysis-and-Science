@@ -30,3 +30,4 @@ _RData
 _Rhistory
 TSFP/code/Token
 *.pickle
+*.streamlit
