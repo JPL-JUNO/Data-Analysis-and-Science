@@ -119,3 +119,12 @@ sectors.apply(
 )
 
 sectors.apply(get_value, columns="Profits").head()
+
+sectors_and_industry = fortune.groupby(by=["Sector", "Industry"])
+sectors_and_industry.size()
+
+sectors_and_industry.get_group(("Business Services", "Education"))
+
+sectors_and_industry.sum(numeric_only=True).head()
+
+sectors_and_industry["Revenues"].mean().head(5)
