@@ -371,6 +371,7 @@ ATR（Average True Range，真实波动幅度均值）是一个用来衡量股�
 5. 用如下公式计算其他元素的值：
 
 $$\frac{(N-1)PATR+TR}{N}$$
+
 这里，$PATR$ 表示前一个交易日的 ATR 值，$TR$ 即当日的真实波动幅度。
 
 ```python
