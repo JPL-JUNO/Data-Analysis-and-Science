@@ -22,8 +22,7 @@ P4F/numbers.csv
 *.xlsx
 *.h5
 P4F/numbers.xlsx
-R4DS/.vscode/settings.json
-*.vscode
+.vscode
 *.rds
 *.user
 _RData
