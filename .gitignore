@@ -19,7 +19,6 @@ P4F/data.pkl
 *.h5s
 P4F/data.csv
 P4F/numbers.csv
-*.xlsx
 *.h5
 P4F/numbers.xlsx
 .vscode
