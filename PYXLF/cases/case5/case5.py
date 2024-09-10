@@ -29,3 +29,23 @@ for i in file_list:
     workbook.save()
 
 app.quit()
+
+# 批量删除工作表
+# file_path = "./销售表1"
+# file_list = os.listdir(file_path)
+# app = xw.App(visible=False, add_book=False)
+# for i in file_list:
+#     if i.startswith("~$"):
+#         continue
+#     file_paths = os.path.join(file_path, i)
+#     workbook = app.books.open(file_paths)
+
+#     for sheet in workbook.sheets:
+#         if sheet.name == sheet_name:
+#             sheet.delete()  # 删除工作表
+
+#             break
+
+#     workbook.save()
+
+# app.quit()
