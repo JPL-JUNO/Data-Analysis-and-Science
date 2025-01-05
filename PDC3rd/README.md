@@ -9,7 +9,7 @@
 - [x] Algorithms and How to Apply Them
 - [ ] Visualization
 - [x] Reshaping DataFrames
-- [ ] Group By
+- [x] Group By
 - [ ] Temporal Data Types and Algorithms
 - [ ] General Usage and Performance Tips
 - [ ] The pandas Ecosystem
