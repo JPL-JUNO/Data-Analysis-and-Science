@@ -1,0 +1,14 @@
+-- 同时使用外连接和聚合
+DROP TABLE if EXISTS emp_bonus;
+CREATE TABLE emp_bonus(
+    EMPNO INTEGER NOT NULL,
+    RECEIVED VARCHAR(12),
+    TYPE INT
+);
+
+INSERT INTO emp_bonus
+VALUES(7934, '17-MAR-2005', 1);
+INSERT INTO emp_bonus
+VALUES (7934, '15-FEB-2005 ', 2);
+
+SELECT * FROM emp_bonus;

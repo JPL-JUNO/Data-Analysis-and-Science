@@ -1,0 +1,4 @@
+SELECT d.*
+FROM dept d
+    LEFT JOIN emp e ON d.`DEPTNO` = e.`DEPTNO`
+WHERE e.`DEPTNO` IS NULL;
