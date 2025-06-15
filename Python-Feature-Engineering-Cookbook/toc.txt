@@ -1,0 +1,7 @@
+Replacing categories with counts or the frequency of observations
+Replacing categories with ordinal numbers
+Performing ordinal encoding based on the target value
+Implementing target mean encoding
+Encoding with Weight of Evidence
+Grouping rare or infrequent categories
+Performing binary encoding

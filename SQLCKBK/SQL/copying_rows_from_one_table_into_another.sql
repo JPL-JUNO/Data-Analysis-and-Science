@@ -1,0 +1,13 @@
+-- Active: 1743238352364@@127.0.0.1@3306@sqlckbk
+CREATE TABLE DEPT_EAST (
+    DEPTNO integer,
+    DNAME VARCHAR(14),
+    LOC VARCHAR(13)
+);
+
+INSERT INTO
+    DEPT_EAST (`DEPTNO`, `DNAME`, `LOC`)
+SELECT `DEPTNO`, `DNAME`, `LOC`
+FROM dept
+WHERE
+    loc in ('New York', 'Boston');
